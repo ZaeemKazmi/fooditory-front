@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-const axios = require('axios')
+import { Redirect } from 'react-router-dom'
+import { signup , isAuthenticated } from '../auth';
 
 class Signup extends Component {
     constructor() {
@@ -19,10 +20,9 @@ class Signup extends Component {
         }
     }
 
-
-
     handleChange = name => event => {
         this.setState({ error: "" });
+        this.setState({ open: false });
         this.setState({ [name]: event.target.value });
     }
 
@@ -45,33 +45,32 @@ class Signup extends Component {
             }
         };
         console.log(user);
-        this.signup(user);
+        signup(user).then(response => {
+            console.log(response)
+            this.setState({
+                name: "",
+                email: "",
+                password: "",
+                countryOfOrigin: "",
+                accommName: "",
+                accommStreet: "",
+                accommZipcode: "",
+                accommCity: "Munich",
+                accommCountry: "Germany",
+                error: "",
+                open: true
+            });
+        }).catch(err => {
+            console.log(err.response);
+            if (!(JSON.stringify(err.response.data.error).startsWith("{"))) {
+                this.setState({ error: err.response.data.error });
+            } else {
+                this.setState({ error: "Multiple incorrect values, please fix for your errors and then try again!" });
+            }
+        });
     }
 
-    signup = user => {
-        axios
-            .post('http://localhost:8080/users', user)
-            .then(response => {
-                console.log(response);
-                this.setState({
-                    name: "",
-                    email: "",
-                    password: "",
-                    countryOfOrigin: "",
-                    accommName: "",
-                    accommStreet: "",
-                    accommZipcode: "",
-                    accommCity: "Munich",
-                    accommCountry: "Germany",
-                    error: "",
-                    open: true
-                });
-            })
-            .catch(err => {
-                console.error(err.message);
-                this.setState({ error: "Registration failed!" });
-            });
-    }
+
 
     signupForm = (name, email, password, countryOfOrigin, accommName, accommStreet, accommZipcode, accommCity, accommCountry) => (
         <form>
@@ -144,12 +143,16 @@ class Signup extends Component {
             </div>
             <button onClick={this.clickSubmit} className="btn btn-raised btn-primary">
                 Register
-                    </button>
+            </button>
         </form>
     );
 
     render() {
         const { name, email, password, countryOfOrigin, accommName, accommStreet, accommZipcode, accommCity, accommCountry, error, open } = this.state;
+
+        if(isAuthenticated()){
+            return <Redirect to="/" />
+        }
 
         return (
             <div className="container">
@@ -160,7 +163,7 @@ class Signup extends Component {
                 </div>
 
                 <div className="alert alert-success" style={{ display: open ? "" : "none" }}>
-                    New account is successfully created!
+                    New account is successfully created! Please login.
                 </div>
 
                 {this.signupForm(name, email, password, countryOfOrigin, accommName, accommStreet, accommZipcode, accommCity, accommCountry)}
