@@ -1,0 +1,200 @@
+.App {
+  height: 100vh;
+  display: flex;
+  color: white;
+  background: blue;
+}
+
+.App__Aside {
+  opacity: 0.7;
+  width: 50%;
+  background-color: #032696;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-image: url("https://images.unsplash.com/flagged/photo-1556742524-750f2ab99913?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80");
+}
+
+.App__Form {
+  width: 50%;
+  background-color: #23bedd;
+  padding: 25px 40px;
+  overflow: auto;
+}
+
+.PageSwitcher {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10%;
+}
+
+.PageSwitcher__Item {
+  background-color: #1e3b53;
+  color: #9da6b1;
+  padding: 10px 25px;
+  cursor: pointer;
+  font-size: 0.9em;
+  border: none;
+  outline: none;
+  display: inline-block;
+  text-decoration: none;
+}
+
+.PageSwitcher__Item--Active {
+  background-color: #3e66ef;
+  color: white;
+}
+
+.PageSwitcher__Item:first-child {
+  border-top-left-radius: 25px;
+  border-bottom-left-radius: 25px;
+}
+.PageSwitcher__Item:last-child {
+  border-top-right-radius: 25px;
+  border-bottom-right-radius: 25px;
+}
+
+.FormCenter {
+  margin-bottom: 100px;
+}
+
+.FormTitle {
+  color: #707c8b;
+  font-weight: 300;
+  margin-bottom: 50px;
+}
+
+.FormTitle__Link {
+  color: #ffffff;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 1.7em;
+  margin: 0 10px;
+  padding-bottom: 5px;
+}
+
+.FormTitle__Link:first-child {
+  margin-left: 0;
+  text-decoration: none;
+}
+
+.FormTitle__Link:last-child {
+  margin-left: 0;
+  text-decoration: none;
+}
+
+.FormTitle__Link--Active {
+  color: #3e66ef;
+  border-bottom: 2px solid #3e66ef;
+  text-decoration: none;
+}
+
+.FormField {
+  margin-bottom: 40px;
+}
+
+.FormField__Label {
+  display: block;
+  text-transform: uppercase;
+  font-size: 0.9em;
+  color: white;
+}
+.FormField__Input {
+  width: 85%;
+  background-color: transparent;
+  border: none;
+  color: white;
+  outline: none;
+  border-bottom: 1px solid #445366;
+  font-size: 1em;
+  font-weight: 300;
+  padding-bottom: 10px;
+  margin-top: 10px;
+}
+
+.FormField__Input::placeholder {
+  color: whitesmoke;
+  padding-bottom: 10px;
+}
+
+.FormField__Button {
+  background-color: #3e66ef;
+  color: white;
+  border: none;
+  outline: none;
+  border-radius: 25px;
+  padding: 15px 70px;
+  font-size: 0.8em;
+  font-weight: 500;
+}
+
+.FormField__Link {
+  color: white;
+  text-decoration: none;
+  display: inline-block;
+  padding-bottom: 5px;
+}
+
+.FormField__CheckboxLabel {
+  color: #646f7d;
+  font-size: 0.9em;
+}
+
+.FormField__Checkbox {
+  position: relative;
+  top: 1.5px;
+}
+
+.FormField__TermsLink {
+  color: white;
+  border-bottom: 1px solid #199087;
+  text-decoration: none;
+  display: inline-block;
+  padding-bottom: 2px;
+  margin-left: 5px;
+}
+
+.PageSwitcher__Item {
+  color: #fff;
+}
+.PageSwitcher__Item:hover {
+  color: #fff;
+}
+
+.asidebody {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #3e66ef;
+}
+
+.anim {
+  top: 40%;
+  left: 8%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  font-family: sans-serif;
+  text-transform: uppercase;
+  font-size: 5vw;
+  letter-spacing: 3px;
+  overflow: hidden;
+  /* background: linear-gradient(100deg, #fff, rgb(255, 255, 255), #fff);
+  background-repeat: no-repeat;
+  background-size: 80%;
+  animation: animate 14s linear infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: rgba(255, 255, 255, 0);  */
+}
+
+@keyframes animate {
+  0% {
+    background-position: -500%;
+  }
+  100% {
+    background-position: 500%;
+  }
+}
