@@ -38,7 +38,7 @@ class OfferFood extends Component {
       image
     } = this.state;
 
-    const offerFood = {
+    const item = {
       name: name,
       ingredients: ingredients,
       cuisine: cuisine,
@@ -47,10 +47,10 @@ class OfferFood extends Component {
       status: status,
       image: image
     };
-    console.log(offerFood);
+    console.log(item);
     var self = this;
     axios
-      .post("http://localhost:8080/offerFood", offerFood)
+      .post("http://localhost:8080/item", item)
       .then(function(response) {
         console.log(response);
 
@@ -79,15 +79,7 @@ class OfferFood extends Component {
       });
   };
 
-  offerFoodForm = (
-    name,
-    ingredients,
-    cuisine,
-    price,
-    currency,
-    status,
-    image
-  ) => (
+  itemForm = (name, ingredients, cuisine, price, currency, status, image) => (
     <form>
       <div className="form-group">
         <label className="text-muted">Item Name</label>
@@ -191,7 +183,7 @@ class OfferFood extends Component {
           Item has published successfully.
         </div>
 
-        {this.offerFoodForm(
+        {this.itemForm(
           name,
           ingredients,
           cuisine,

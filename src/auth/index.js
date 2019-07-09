@@ -11,17 +11,6 @@ export const signup = user => {
     });
 };
 
-export const offerFood = offerFood => {
-  return axios
-    .post("http://localhost:8080/offerFood", offerFood)
-    .then(response => {
-      return response;
-    })
-    .catch(err => {
-      return Promise.reject(err);
-    });
-};
-
 export const login = user => {
   return axios
     .post("http://localhost:8080/login", user)
