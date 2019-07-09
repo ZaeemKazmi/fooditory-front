@@ -1,12 +1,17 @@
 import React from "react";
 import "./Home.css";
+import OfferFood from "./OfferFood";
+import { Link, withRouter } from "react-router-dom";
 
 const Home = () => (
   <div className="row App__Aside">
     <div className="col-md-6 leftSide">
       {" "}
-      <div>
-        <button className="btn btn-lg text-white fbutton"> Offer food</button>{" "}
+      <div className="box">
+        <Link className="link" to="/offerFood">
+          {" "}
+          Offer Food
+        </Link>
       </div>
       <div>
         <ul className="rightList">
@@ -18,8 +23,11 @@ const Home = () => (
     </div>
     <div className="col-md-6 rightSide">
       {" "}
-      <div>
-        <button className="btn btn-lg text-white fbutton"> Buy food</button>{" "}
+      <div className="box">
+        <Link className="link" to="/">
+          {" "}
+          Buy Food
+        </Link>
       </div>
       <div>
         <ul className="leftList">
