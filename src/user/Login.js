@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom'
+import { Redirect } from 'react-router-dom';
 import { login , authenticate , isAuthenticated } from '../auth';
 
 class Login extends Component {
@@ -37,7 +37,7 @@ class Login extends Component {
         }).catch(err => {
             this.setState({ loading: false });
             console.log(err.response);
-            this.setState({ error: err.response.data.error });
+            this.setState({ error: "There was error in logging in, please try again." });
         });
     }
 
