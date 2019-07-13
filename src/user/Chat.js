@@ -4,7 +4,7 @@ import io from "socket.io-client";
 // import update from 'immutability-helper';
 
 import { isAuthenticated } from '../auth';
-import { loadUserConversations } from '../utils/chat';
+import { loadConversations } from '../utils/chat';
 import { getUsername } from '../utils/user';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -16,7 +16,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Chip from '@material-ui/core/Chip';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-
+var datetime = require('node-datetime');
 let socket;
 let loggedInUser;
 const clonedeep = require('lodash.clonedeep')
@@ -28,46 +28,7 @@ class Chat extends Component {
         super()
         this.state = {
             textValue: '',
-            chats: [
-                {
-                    "5d1c9edbdafc7451e8dd4000": {
-                        itemName: 'Chicken Karahi',
-                        sellerId: "5d2393f42e252b8751e4be2e",
-                        sellerName: "Amber Kazmi",
-                        buyerId: "5d2393992e252b8751e4be2c",
-                        buyerName: "Zaeem Kazmi",
-                        messages: [{ senderId: "5d2393992e252b8751e4be2c", senderName: "Zaeem Kazmi", msg: "Sis can I buy it?" }]
-                    }
-                },
-                {
-                    "5d1c9edbdafc7451e8dd4010": {
-                        itemName: 'Pasta',
-                        sellerId: "5d2393992e252b8751e4be2c",
-                        sellerName: "Zaeem Kazmi",
-                        buyerId: "5d2393f42e252b8751e4be2e",
-                        buyerName: "Amber Kazmi",
-                        messages: [
-                            { senderId: "5d2393f42e252b8751e4be2e", senderName: "Amber Kazmi", msg: "Hi" },
-                            { senderId: "5d2393f42e252b8751e4be2e", senderName: "Amber Kazmi", msg: "For how much?" },
-                            { senderId: "5d2393992e252b8751e4be2c", senderName: "Zaeem Kazmi", msg: "For 50Rs" }
-                        ]
-                    }
-                },
-                {
-                    "5d1c9edbdafc7451e8dd4005": {
-                        itemName: 'Chicken Biryani',
-                        sellerId: "5d2393f42e252b8751e4be2e",
-                        sellerName: "Amber Kazmi",
-                        buyerId: "5d2393992e252b8751e4be2c",
-                        buyerName: "Zaeem Kazmi",
-                        messages: [
-                            { senderId: "5d2393992e252b8751e4be2c", senderName: "Zaeem Kazmi", "msg": "Is that the final price?" },
-                            { senderId: "5d2393f42e252b8751e4be2e", senderName: "Amber Kazmi", "msg": "Yup :)" },
-                            { senderId: "5d2393992e252b8751e4be2c", senderName: "Zaeem Kazmi", msg: "I see, thanks for response" }
-                        ]
-                    }
-                }
-            ],
+            chats: [],
             activeChat: "",
             error: ""
         }
@@ -137,7 +98,19 @@ class Chat extends Component {
         let newArray = clonedeep(array);
         for (var i = 0; i < newArray.length; i++) {
             if (Object.keys(newArray[i])[0] === id) {
-                return newArray[i][id]["messages"];
+                return newArray[i][id].messages;
+            }
+        }
+        return [];
+    }
+
+    getSenderName = (array, chatId, personId) => {
+        let newArray = clonedeep(array);
+        for (var i = 0; i < newArray.length; i++) {
+            if (Object.keys(newArray[i])[0] === chatId) {
+                if(newArray[i][chatId]["sellerId"] === personId)
+                    return newArray[i][chatId].sellerName
+                else return newArray[i][chatId].buyerName;
             }
         }
         return [];
@@ -309,46 +282,37 @@ class Chat extends Component {
     createMessage = (senderId, senderName, msg) => {
         return {
             'senderId': senderId,
-            'senderName': senderName,
             'msg': msg,
-            'createdAt': Date.now()
+            'createdAt': Date.now(),
+            'senderName': senderName
         };
     }
 
+    
     insertMessageInChat = (itemId, senderId, senderName, msg) => {
         console.log(this.state.chats)
         const newMessage = this.createMessage(senderId, senderName, msg);
-
-        // console.log(this.state.chats[this.getChatIndexInState(itemId)])
-        // // const messages 
-        // this.setState({
-        //     chats: update(this.state.chats, {[itemId]: {messages: {$set: newMessage}}})
-        //   })
-        // console.log(this.state)
-        // .setState((state) => {
-
-        //     return {
-        //         chats: {
-        //             [itemId] : {
-        //                 'messages': [...state.chats[itemId].messages, newMessage]
-        //             }
-        //         } 
-        //     };
-        // });
-
-       return;
-        // this.setState((state) => {
-
-        //     return {
-        //         chats: {
-        //             [itemId] : {
-        //                 'messages': [...state.chats[itemId].messages, newMessage]
-        //             }
-        //         } 
-        //     };
-        // });
+        
+        this.setState({
+            chats: this.state.chats.map((chat, index) => {
+                if (Object.keys(chat)[0] === itemId) {
+                    chat[itemId].messages= [...chat[itemId].messages, newMessage]
+                }
+                console.log("Inside 2 the impossible map")
+                return chat;
+            })
+        });
+        console.log("after insert", this.state.chats)
     }
     // react components default methods
+
+    arrayRemove = (arr, value) => {
+
+        return arr.filter(function(ele){
+            return Object.keys(ele)[0] != value;
+        });
+     
+     }
 
     componentWillMount(props) {
         loggedInUser = isAuthenticated();
@@ -361,7 +325,7 @@ class Chat extends Component {
 
         socket = io('http://localhost:8080');
 
-        loadUserConversations(loggedInUser.token).then(response => {
+        loadConversations(loggedInUser.token).then(response => {
             // this.setState({ loading: false });
             // authenticate(response.data, () => {
             // console.log(response.data)
@@ -378,21 +342,29 @@ class Chat extends Component {
                     otherUserId = chat.buyerId;
                     role = 'buyer';
                 }
-                this.setState({chats : []});
+                delete chat["_id"]
+                delete chat["__v"]
+                delete chat["createdAt"]
+                // this.setState({ chats: [] });
                 // console.log(chat)
                 getUsername(otherUserId).then(res => {
                     // console.log(res);
                     let chatToInsert;
                     let newMessages = clonedeep(chat.messages);
                     newMessages.map((msg) => {
-                        if(msg.senderId === loggedInUser.user._id){
+                        if (msg.senderId === loggedInUser.user._id) {
                             msg["senderName"] = loggedInUser.user.name;
                         }
                         else {
                             msg["senderName"] = res.data.name;
                         }
-                        console.log(msg["senderName"])
+                        delete msg["_id"]
+                        delete msg["__v"]
+                        delete msg["chatId"]
+                        // delete msg["_proto_"]
+                        // console.log(msg)
                     })
+                    //Have to modify loadConversations api, such that it sends Item Name as well
                     if (role === 'seller') {
                         chatToInsert = this.insertChat(chat.itemId, "ChatName", chat.sellerId, res.data.name, chat.buyerId, loggedInUser.user.name, newMessages)
                     }
@@ -401,7 +373,7 @@ class Chat extends Component {
                     }
                     // console.log(chatToInsert)
                     loadedState.push(chatToInsert)
-                  
+
                     this.setState((state) => {
                         return {
                             chats: [...state.chats, chatToInsert]
@@ -430,8 +402,7 @@ class Chat extends Component {
         const { newChat } = this.props.location;
 
         if (newChat !== undefined) {
-            const tempNewChat = this.insertChat(newChat.itemId, newChat.itemName, newChat.sellerId, newChat.sellerName, loggedInUser.user._id, loggedInUser.user.name, [])
-
+            
             // pushToAry(newChat.itemId, {
             //     itemName: newChat.itemName,
             //     sellerId: newChat.sellerId,
@@ -446,9 +417,11 @@ class Chat extends Component {
                 console.log(newChat.itemId, " already exists")
                 this.setState({ activeChat: newChat.itemId });
             } else {
-                console.log("newItem", tempNewChat)
+                const tempNewChat = this.insertChat(newChat.itemId, newChat.itemName, newChat.sellerId, newChat.sellerName, loggedInUser.user._id, loggedInUser.user.name, [])
+                
+                console.log("tempNewChatSend", tempNewChat)
                 const newConvo = [tempNewChat, ...this.state.chats]
-                console.log("newConvo", newConvo)
+                console.log("newConvoStartByMe", newConvo)
                 this.setState((state) => {
                     return {
                         chats: [tempNewChat, ...state.chats]
@@ -466,7 +439,37 @@ class Chat extends Component {
         }
 
         socket.on(loggedInUser.user._id, (data) => {
-            console.log(data)
+            console.log(data);
+
+            const senderName = this.getSenderName(this.state.chats,this.state.activeChat,data.senderId);
+
+            if (this.checkIfAlreadyMessged(data.itemId)) {
+                console.log(data.itemId, " already exists")
+                this.insertMessageInChat(
+                    data.itemId,
+                    data.senderId,
+                    senderName,
+                    data.msg);
+            } else {
+                const tempNewChat = this.insertChat(data.itemId, "ChatName", loggedInUser.user._id, loggedInUser.user.name, data.senderId, senderName, [])
+
+                console.log("newItem", tempNewChat)
+                const newConvo = [tempNewChat, ...this.state.chats]
+                console.log("newConvo", newConvo)
+                this.setState((state) => {
+                    return {
+                        chats: [tempNewChat, ...state.chats]
+                    };
+                });
+
+                this.insertMessageInChat(
+                    data.itemId,
+                    data.senderId,
+                    senderName,
+                    data.msg);
+            }
+
+           
         })
         // socket.on(loggedInUser.user._id, (data) => {
         //     const parsedData = JSON.stringify(data)
@@ -518,7 +521,7 @@ class Chat extends Component {
                         </div>
                         <div className={this.useStyles.chatWindow}>
                             {
-                                // console.log(this.filterChat(chats, activeChat))
+                                // console.log(this.filterChat(this.state.chats, activeChat))
                                 this.filterChat(chats, activeChat).map((chat, i) => (
                                     // console.log(chat.from)
                                     <div className={this.useStyles.flex} key={i}>
@@ -527,6 +530,9 @@ class Chat extends Component {
                                     </div>
                                 ))
                             }
+                            {/* {
+                                console.log("filterchat",this.state.chats)
+                            } */}
                         </div>
                     </div>
                     {this.chatForm(textValue)}

@@ -1,8 +1,19 @@
 const axios = require('axios');
 
-export const loadUserConversations = authToken => {
+export const loadConversations = (authToken) => {
     return axios
-        .get('http://localhost:8080/chats', { params:{}, headers: { 'Authorization':  authToken } })
+        .get('http://localhost:8080/conversations', { params:{}, headers: { 'Authorization':  authToken } })
+        .then(response => {
+            return response;
+        })
+        .catch(err => {
+            return Promise.reject(err);
+        });
+}
+
+export const loadActiveChatMessages = (authToken, chatId) => {
+    return axios
+        .get('http://localhost:8080/messages', { params:{id : chatId}, headers: { 'Authorization':  authToken } })
         .then(response => {
             return response;
         })
