@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import io from "socket.io-client";
+import classes from "./Chat.css";
+import Style from 'style-it';
 // import update from 'immutability-helper';
 
 import { isAuthenticated } from '../auth';
@@ -20,7 +22,7 @@ var datetime = require('node-datetime');
 let socket;
 let loggedInUser;
 const clonedeep = require('lodash.clonedeep')
-
+const $messages = document.querySelector('#messages')
 
 
 class Chat extends Component {
@@ -104,16 +106,26 @@ class Chat extends Component {
         return [];
     }
 
+    getActiveChatSellerInfo = () => {
+        let i;
+        for (i in (this.state.chats)) {
+            if (Object.keys(this.state.chats[i])[0] === this.state.activeChat) {
+                return Object.values(this.state.chats[i])[0];
+            }
+        }
+        return [];
+    }
+
     getSenderName = (array, chatId, personId) => {
         let newArray = clonedeep(array);
         for (var i = 0; i < newArray.length; i++) {
             if (Object.keys(newArray[i])[0] === chatId) {
-                if(newArray[i][chatId]["sellerId"] === personId)
+                if (newArray[i][chatId]["sellerId"] === personId)
                     return newArray[i][chatId].sellerName
                 else return newArray[i][chatId].buyerName;
             }
         }
-        return [];
+        return "";
     }
 
     pushToAry = (name, val) => {
@@ -223,22 +235,17 @@ class Chat extends Component {
                 }
             });
         }
-        // socket.emit('private_message', value, (error) => {
-        //     if (!error) {
-        //         // initialState.push(JSON.stringify(value).item);
-        //     }
-        // });
 
     }
 
 
     chatForm = (textValue) => (
-        <div className={this.useStyles.flex}>
+        <div className="flex">
             <TextField
                 label="Send a chat message"
                 onChange={this.handleChange("textValue")}
                 value={textValue}
-                className={this.useStyles.chatBox}
+                className="chatBox"
                 multiline
                 required
                 rowsMax="5"
@@ -248,13 +255,13 @@ class Chat extends Component {
                 onClick={this.clearTextfieldAction}
                 variant="contained"
                 color="primary"
-                className={this.useStyles.button}>
+                className="button">
                 Clear
           </Button>
             <Button
                 variant="contained"
                 color="primary"
-                className={this.useStyles.button}
+                className="button"
                 onClick={() => {
                     this.sendChatAction(
                         this.state.activeChat,
@@ -266,6 +273,33 @@ class Chat extends Component {
                 }}>
                 Send
           </Button>
+        </div>
+    );
+
+    sellingForm = (name) => (
+        <div className="flex">
+            <Typography variant="body1" gutterBottom className="messageInfoText" >Have you sold this item to {name} ?</Typography>
+            <Button
+                variant="contained"
+                color="primary"
+                className="button">
+                Sold
+          </Button>
+            <div className="flex">
+                <Typography variant="body1" gutterBottom className="messageInfoText" >Can you please confirm your action once again</Typography>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    className="button">
+                    Confirm
+                </Button>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    className="button">
+                    Cancel
+                </Button>
+            </div>
         </div>
     );
 
@@ -288,15 +322,15 @@ class Chat extends Component {
         };
     }
 
-    
+
     insertMessageInChat = (itemId, senderId, senderName, msg) => {
         console.log(this.state.chats)
         const newMessage = this.createMessage(senderId, senderName, msg);
-        
+
         this.setState({
             chats: this.state.chats.map((chat, index) => {
                 if (Object.keys(chat)[0] === itemId) {
-                    chat[itemId].messages= [...chat[itemId].messages, newMessage]
+                    chat[itemId].messages = [...chat[itemId].messages, newMessage]
                 }
                 console.log("Inside 2 the impossible map")
                 return chat;
@@ -308,11 +342,11 @@ class Chat extends Component {
 
     arrayRemove = (arr, value) => {
 
-        return arr.filter(function(ele){
+        return arr.filter(function (ele) {
             return Object.keys(ele)[0] != value;
         });
-     
-     }
+
+    }
 
     componentWillMount(props) {
         loggedInUser = isAuthenticated();
@@ -366,10 +400,10 @@ class Chat extends Component {
                     })
                     //Have to modify loadConversations api, such that it sends Item Name as well
                     if (role === 'seller') {
-                        chatToInsert = this.insertChat(chat.itemId, "ChatName", chat.sellerId, res.data.name, chat.buyerId, loggedInUser.user.name, newMessages)
+                        chatToInsert = this.insertChat(chat.itemId, "FoodName", chat.sellerId, res.data.name, chat.buyerId, loggedInUser.user.name, newMessages)
                     }
                     else {
-                        chatToInsert = this.insertChat(chat.itemId, "ChatName", chat.sellerId, loggedInUser.user.name, chat.buyerId, res.data.name, newMessages)
+                        chatToInsert = this.insertChat(chat.itemId, "FoodName", chat.sellerId, loggedInUser.user.name, chat.buyerId, res.data.name, newMessages)
                     }
                     // console.log(chatToInsert)
                     loadedState.push(chatToInsert)
@@ -402,7 +436,7 @@ class Chat extends Component {
         const { newChat } = this.props.location;
 
         if (newChat !== undefined) {
-            
+
             // pushToAry(newChat.itemId, {
             //     itemName: newChat.itemName,
             //     sellerId: newChat.sellerId,
@@ -418,7 +452,7 @@ class Chat extends Component {
                 this.setState({ activeChat: newChat.itemId });
             } else {
                 const tempNewChat = this.insertChat(newChat.itemId, newChat.itemName, newChat.sellerId, newChat.sellerName, loggedInUser.user._id, loggedInUser.user.name, [])
-                
+
                 console.log("tempNewChatSend", tempNewChat)
                 const newConvo = [tempNewChat, ...this.state.chats]
                 console.log("newConvoStartByMe", newConvo)
@@ -441,7 +475,7 @@ class Chat extends Component {
         socket.on(loggedInUser.user._id, (data) => {
             console.log(data);
 
-            const senderName = this.getSenderName(this.state.chats,this.state.activeChat,data.senderId);
+            const senderName = this.getSenderName(this.state.chats, this.state.activeChat, data.senderId);
 
             if (this.checkIfAlreadyMessged(data.itemId)) {
                 console.log(data.itemId, " already exists")
@@ -451,7 +485,7 @@ class Chat extends Component {
                     senderName,
                     data.msg);
             } else {
-                const tempNewChat = this.insertChat(data.itemId, "ChatName", loggedInUser.user._id, loggedInUser.user.name, data.senderId, senderName, [])
+                const tempNewChat = this.insertChat(data.itemId, "FoodName", loggedInUser.user._id, loggedInUser.user.name, data.senderId, senderName, [])
 
                 console.log("newItem", tempNewChat)
                 const newConvo = [tempNewChat, ...this.state.chats]
@@ -469,7 +503,7 @@ class Chat extends Component {
                     data.msg);
             }
 
-           
+
         })
         // socket.on(loggedInUser.user._id, (data) => {
         //     const parsedData = JSON.stringify(data)
@@ -499,35 +533,100 @@ class Chat extends Component {
         //     return <Redirect to="/" />
         // }
 
-        return (
+        return Style.it(`
+        .root {
+            margin: '50px';
+            /* padding: theme.spacing(3, 2); */
+        }
+        
+        .flex {
+            display: flex;
+            align-items: center;
+        }
+        
+        .topicsWindow {
+            width: 30%;
+            height: 300px;
+            border-right: 1px solid grey;
+        }
+
+        .selectedTopic {
+            background-color: #8A0651;
+            color: white;
+        }
+        
+        .chatWindow {
+            width: 70%;
+            height: 300px;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow: scroll;
+        }
+        
+        .chatMessageRight {
+            text-align: justify;
+            text-align: -webkit-right;
+            -moz-text-align-last: right;
+            text-align-last: right;
+            
+        }
+
+        .chatMessageLeft {
+            text-align: justify;
+            text-align: -webkit-left;
+            -moz-text-align-last: left;
+            text-align-last: left;
+        }
+
+        .messageInfoText {
+            font-size: 0.3em;
+        }
+
+        .chatBox {
+            width: 85%;
+        }
+        
+        .button {
+            width: 15%;
+        }
+        `,
             <div>
                 <div className="alert alert-danger" style={{ display: error ? "" : "none" }}>
                     {error}
                 </div>
-                <Paper className={this.useStyles.root}>
+                <Paper className="root">
                     <Typography variant="h4" component="h5">Chat app</Typography>
                     <Typography variant="h5" component="h5">{this.getActiveChatInfo()}</Typography>
-                    <div className={this.useStyles.flex}>
-                        <div className={this.useStyles.topicsWindow}>
+                    <div className="flex">
+                        <div className="topicsWindow">
                             <List>
                                 {
                                     chats.map(chat => (
-                                        <ListItem key={Object.keys(chat)[0]} onClick={e => this.handleChatChange(e, Object.keys(chat)[0])} button>
-                                            <ListItemText primary={Object.values(chat)[0]["itemName"] + " by " + Object.values(chat)[0]["sellerName"]} />
+                                        <ListItem key={Object.keys(chat)[0]} onClick={e => this.handleChatChange(e, Object.keys(chat)[0])} className={activeChat === Object.keys(chat)[0] ? "selectedTopic" : ""} button>
+                                            {(Object.values(chat)[0]["sellerId"] !== loggedInUser.user._id) ?
+                                                <ListItemText primary={Object.values(chat)[0]["itemName"] + " by " + Object.values(chat)[0]["sellerName"]} />
+                                                :
+                                                <ListItemText primary={Object.values(chat)[0]["itemName"] + " by YOU"} />
+                                            }
                                         </ListItem>
                                     ))
                                 }
                             </List>
                         </div>
-                        <div className={this.useStyles.chatWindow}>
+                        <div className="chatWindow" id="messages">
                             {
                                 // console.log(this.filterChat(this.state.chats, activeChat))
                                 this.filterChat(chats, activeChat).map((chat, i) => (
                                     // console.log(chat.from)
-                                    <div className={this.useStyles.flex} key={i}>
-                                        <Chip label={chat.senderName} className={this.useStyles.chip} />
-                                        <Typography variant="body1" gutterBottom>{chat.msg}</Typography>
-                                    </div>
+                                    (chat.senderId === loggedInUser.user._id) ?
+                                        (<div className="flex" key={i} className="chatMessageLeft">
+                                            <Chip label={chat.msg} className="chip" />
+                                            <Typography variant="body1" gutterBottom className="messageInfoText" >{chat.senderName}</Typography>
+                                        </div>) :
+                                        (<div className="flex" key={i} className="chatMessageRight">
+                                            <Chip label={chat.msg} className="chip" />
+                                            <Typography variant="body1" gutterBottom className="messageInfoText" >{chat.senderName}</Typography>
+                                        </div>)
                                 ))
                             }
                             {/* {
@@ -536,6 +635,12 @@ class Chat extends Component {
                         </div>
                     </div>
                     {this.chatForm(textValue)}
+                    
+
+
+                    
+                    {/* {console.log("last",this.getActiveChatSellerInfo()["sellerName"])} */}
+                    {this.getActiveChatSellerInfo().sellerId === loggedInUser.user._id ? this.sellingForm(this.getActiveChatSellerInfo().sellerName) : ""}
                 </Paper>
             </div>
         );
