@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
-import { offerFood } from "../auth";
+import { offerFood, authenticate, isAuthenticated } from "../auth";
+
 import "./OfferFood.css";
 const axios = require("axios");
 
@@ -170,6 +171,10 @@ class OfferFood extends Component {
   );
 
   render() {
+    if (isAuthenticated() === false) {
+      return <Redirect to="/login" />;
+    }
+
     const {
       name,
       ingredients,
