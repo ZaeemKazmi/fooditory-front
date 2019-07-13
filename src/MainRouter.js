@@ -4,7 +4,6 @@ import Home from './core/Home';
 import Menu from './core/Menu';
 import Signup from './user/Signup';
 import Login from './user/Login';
-import ChatPanel from './user/ChatPanel';
 import TestPage from './user/TestPage';
 import Chat from './user/Chat';
 
@@ -15,7 +14,6 @@ const MainRouter = () => (
             <Route exact path="/" component={Home}></Route> 
             <Route exact path="/signup" component={Signup}></Route>    
             <Route exact path="/login" component={Login}></Route>    
-            <Route exact path="/chatpanel" component={ChatPanel}></Route>    
             <Route exact path="/testpage" component={TestPage}></Route>
             <Route exact path="/chat" component={Chat}></Route>
         </Switch>
