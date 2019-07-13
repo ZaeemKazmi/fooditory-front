@@ -9,7 +9,6 @@ import { isAuthenticated } from '../auth';
 import { loadConversations } from '../utils/chat';
 import { getUsername } from '../utils/user';
 
-import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
@@ -18,7 +17,6 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Chip from '@material-ui/core/Chip';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-var datetime = require('node-datetime');
 let socket;
 let loggedInUser;
 const clonedeep = require('lodash.clonedeep')
@@ -36,35 +34,6 @@ class Chat extends Component {
         }
     }
 
-    useStyles = makeStyles(theme => ({
-        root: {
-            margin: '50px',
-            padding: theme.spacing(3, 2),
-        },
-        flex: {
-            display: 'flex',
-            alignItems: 'center'
-        },
-        topicsWindow: {
-            width: '30%',
-            height: '300px',
-            borderRight: '1px solid grey'
-        },
-        chatWindow: {
-            width: '70%',
-            height: '300px',
-            padding: '20px'
-        },
-        chatBox: {
-            width: '85%'
-        },
-        button: {
-            width: '15%'
-        },
-    }));
-
-
-
     handleChange = name => event => {
         this.setState({ error: "" });
         this.setState({ [name]: event.target.value });
@@ -73,28 +42,6 @@ class Chat extends Component {
     handleChatChange = (event, index) => {
         this.setState({ activeChat: index });
     }
-
-    // clickSubmit = event => {
-    //     event.preventDefault();
-    //     this.setState({ loading: true });
-    //     const { email, password } = this.state;
-
-    //     const user = {
-    //         email,
-    //         password
-    //     };
-    //     console.log(user);
-    //     login(user).then(response => {
-    //         this.setState({ loading: false });
-    //         authenticate(response.data, () => {
-    //             this.setState({ redirectToReferer: true });
-    //         });
-    //     }).catch(err => {
-    //         this.setState({ loading: false });
-    //         console.log(err.response);
-    //         this.setState({ error: err.response.data.error });
-    //     });
-    // }
 
     filterChat = (array, id) => {
         let newArray = clonedeep(array);
@@ -317,7 +264,7 @@ class Chat extends Component {
         return {
             'senderId': senderId,
             'msg': msg,
-            'createdAt': Date.now(),
+            'createdAt': new Date().toLocaleString(),
             'senderName': senderName
         };
     }
@@ -392,6 +339,7 @@ class Chat extends Component {
                         else {
                             msg["senderName"] = res.data.name;
                         }
+                        msg["createdAt"] = new Date(msg["createdAt"]).toLocaleString()
                         delete msg["_id"]
                         delete msg["__v"]
                         delete msg["chatId"]
@@ -413,6 +361,7 @@ class Chat extends Component {
                             chats: [...state.chats, chatToInsert]
                         };
                     });
+                    console.log(this.state)
                 }).catch(err => { console.log(err) });
 
             });
@@ -621,11 +570,11 @@ class Chat extends Component {
                                     (chat.senderId === loggedInUser.user._id) ?
                                         (<div className="flex" key={i} className="chatMessageLeft">
                                             <Chip label={chat.msg} className="chip" />
-                                            <Typography variant="body1" gutterBottom className="messageInfoText" >{chat.senderName}</Typography>
+                                            <Typography variant="body1" gutterBottom className="messageInfoText" >{chat.senderName} @ {chat.createdAt}</Typography>
                                         </div>) :
                                         (<div className="flex" key={i} className="chatMessageRight">
                                             <Chip label={chat.msg} className="chip" />
-                                            <Typography variant="body1" gutterBottom className="messageInfoText" >{chat.senderName}</Typography>
+                                            <Typography variant="body1" gutterBottom className="messageInfoText" >{chat.senderName} @ {chat.createdAt}</Typography>
                                         </div>)
                                 ))
                             }
@@ -636,7 +585,6 @@ class Chat extends Component {
                     </div>
                     {this.chatForm(textValue)}
                     
-
 
                     
                     {/* {console.log("last",this.getActiveChatSellerInfo()["sellerName"])} */}
