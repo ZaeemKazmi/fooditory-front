@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import { offerFood } from "../auth";
+import "./OfferFood.css";
 const axios = require("axios");
 
 class OfferFood extends Component {
@@ -12,17 +13,25 @@ class OfferFood extends Component {
       cuisine: "",
       price: "",
       currency: "",
-      status: null,
-      image: null,
+      status: "",
+      image: "",
       error: "",
       open: false
     };
   }
 
+  fileSelectedHandler = event => {
+    console.log(event.target.files[0]);
+  };
+
   handleChange = name => event => {
     this.setState({ error: "" });
     this.setState({ open: false });
     this.setState({ [name]: event.target.value });
+
+    if (name === "image") {
+      this.setState({ [name]: event.target.files[0] });
+    }
   };
 
   clickSubmit = event => {
@@ -49,33 +58,41 @@ class OfferFood extends Component {
     };
     console.log(item);
     var self = this;
-    axios
-      .post("http://localhost:8080/item", item)
-      .then(function(response) {
-        console.log(response);
 
+    var bodyFormData = new FormData();
+    bodyFormData.set("name", this.state.name);
+    bodyFormData.set("ingredients", this.state.ingredients);
+    bodyFormData.set("cuisine", this.state.cuisine);
+    bodyFormData.set("price", this.state.price);
+    bodyFormData.set("currency", this.state.currency);
+    bodyFormData.append("image", this.state.image);
+
+    for (var key of bodyFormData.entries()) {
+      console.log(key[0] + ", " + key[1]);
+    }
+    axios({
+      method: "post",
+      url: "http://localhost:8080/item",
+      data: bodyFormData,
+      config: { headers: { "Content-Type": "application/json" } }
+    })
+      .then(function(response) {
         self.setState({
           name: "",
           ingredients: "",
           cuisine: "",
           price: "",
           currency: "",
-          status: null,
+          status: "",
           image: null,
           error: "",
           open: false
         });
+        console.log(response);
       })
-      .catch(err => {
-        console.log(err.response);
-        if (!JSON.stringify(err.response.data.error).startsWith("{")) {
-          this.setState({ error: err.response.data.error });
-        } else {
-          this.setState({
-            error:
-              "Multiple incorrect values, please fix for your errors and then try again!"
-          });
-        }
+      .catch(function(response) {
+        //handle error
+        console.log(response);
       });
   };
 
@@ -136,13 +153,13 @@ class OfferFood extends Component {
           value={status}
         />
       </div>
-      <div className="form-group">
+      <div className="form-group fileInput">
         <label className="text-muted">Image</label>
         <input
+          id="image"
           onChange={this.handleChange("image")}
-          type={Buffer}
+          type="File"
           className="form-control"
-          value={image}
         />
       </div>
 
