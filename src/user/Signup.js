@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import { signup, isAuthenticated } from "../auth";
 
+const axios = require("axios");
+
 class Signup extends Component {
   constructor() {
     super();
@@ -9,6 +11,7 @@ class Signup extends Component {
       name: "",
       email: "",
       password: "",
+      image: "",
       countryOfOrigin: "",
       accommName: "",
       accommStreet: "",
@@ -24,6 +27,10 @@ class Signup extends Component {
     this.setState({ error: "" });
     this.setState({ open: false });
     this.setState({ [name]: event.target.value });
+
+    if (name === "image") {
+      this.setState({ [name]: event.target.files[0] });
+    }
   };
 
   clickSubmit = event => {
@@ -33,6 +40,7 @@ class Signup extends Component {
       name,
       email,
       password,
+      image,
       countryOfOrigin,
       accommName,
       accommStreet,
@@ -45,6 +53,7 @@ class Signup extends Component {
       name: name,
       email: email,
       password: password,
+      image: image,
       countryOfOrigin: countryOfOrigin,
       accommodation: {
         name: accommName,
@@ -55,32 +64,61 @@ class Signup extends Component {
       }
     };
     console.log(user);
-    signup(user)
-      .then(response => {
-        console.log(response);
-        this.setState({
+    var self = this;
+    var bodyFormData = new FormData();
+    bodyFormData.set("name", this.state.name);
+    bodyFormData.set("email", this.state.email);
+    bodyFormData.set("password", this.state.password);
+    bodyFormData.append("image", this.state.image);
+    bodyFormData.set("countryOfOrigin", this.state.countryOfOrigin);
+    bodyFormData.set("accommName", this.state.accommName);
+    bodyFormData.set("accommStreet", this.state.accommStreet);
+    bodyFormData.set("accommZipcode", this.state.accommZipcode);
+    bodyFormData.set("accommCity", this.state.accommCity);
+    bodyFormData.set("accommCountry", this.state.accommCountry);
+
+    for (var key of bodyFormData.entries()) {
+      console.log(key[0] + ", " + key[1]);
+    }
+    axios({
+      method: "post",
+      url: "http://localhost:8080/signup",
+      data: bodyFormData,
+      config: { headers: { "Content-Type": "application/json" } }
+    })
+      .then(function(response) {
+        self.setState({
           name: "",
           email: "",
           password: "",
+          image: "",
           countryOfOrigin: "",
           accommName: "",
           accommStreet: "",
           accommZipcode: "",
-          accommCity: "Munich",
-          accommCountry: "Germany",
+          accommCity: "",
+          accommCountry: "",
           error: "",
-          open: true
+          open: false
         });
+        console.log(response);
       })
       .catch(err => {
         console.log(err.response);
-        if (!JSON.stringify(err.response.data.error).startsWith("{")) {
-          this.setState({ error: err.response.data.error });
-        } else {
-          this.setState({
-            error:
-              "Multiple incorrect values, please fix for your errors and then try again!"
-          });
+        if (err.response.status !== 200) {
+          var errmsg = err.response.data.error;
+
+          if (errmsg === undefined) {
+            this.setState({
+              error: "Fields cannot be empty!"
+            });
+          } else if (
+            JSON.stringify(err.response.data.error).includes("E11000")
+          ) {
+            this.setState({ error: "Email already exist!" });
+          } else {
+            this.setState({ error: err.response.data.error });
+          }
         }
       });
   };
@@ -89,6 +127,7 @@ class Signup extends Component {
     name,
     email,
     password,
+    image,
     countryOfOrigin,
     accommName,
     accommStreet,
@@ -122,6 +161,15 @@ class Signup extends Component {
           type="password"
           className="form-control"
           value={password}
+        />
+      </div>
+      <div className="form-group">
+        <label className="text-muted">Image</label>
+        <input
+          id="image"
+          onChange={this.handleChange("image")}
+          type="File"
+          className="form-control"
         />
       </div>
       <div className="form-group">
@@ -181,6 +229,7 @@ class Signup extends Component {
       name,
       email,
       password,
+      image,
       countryOfOrigin,
       accommName,
       accommStreet,
@@ -217,6 +266,7 @@ class Signup extends Component {
           name,
           email,
           password,
+          image,
           countryOfOrigin,
           accommName,
           accommStreet,
