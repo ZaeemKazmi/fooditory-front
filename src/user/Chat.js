@@ -20,7 +20,6 @@ import TextField from '@material-ui/core/TextField';
 let socket;
 let loggedInUser;
 const clonedeep = require('lodash.clonedeep')
-const $messages = document.querySelector('#messages')
 
 
 class Chat extends Component {
@@ -588,7 +587,7 @@ class Chat extends Component {
 
                     
                     {/* {console.log("last",this.getActiveChatSellerInfo()["sellerName"])} */}
-                    {this.getActiveChatSellerInfo().sellerId === loggedInUser.user._id ? this.sellingForm(this.getActiveChatSellerInfo().sellerName) : ""}
+                    {this.getActiveChatSellerInfo().sellerId === loggedInUser.user._id ? this.sellingForm(this.getActiveChatSellerInfo().buyerName) : ""}
                 </Paper>
             </div>
         );
