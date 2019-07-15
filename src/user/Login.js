@@ -26,22 +26,20 @@ class Login extends Component {
     this.setState({ loading: true });
     const { email, password } = this.state;
 
-    const user = {
-      email,
-      password
-    };
-    console.log(user);
-    login(user)
-      .then(response => {
-        this.setState({ loading: false });
-        authenticate(response.data, () => {
-          this.setState({ redirectToReferer: true });
-        });
-      })
-      .catch(err => {
-        this.setState({ loading: false });
-        console.log(err.response);
-        this.setState({ error: err.response.data.error });
+        const user = {
+            email,
+            password
+        };
+        console.log(user);
+        login(user).then(response => {
+            this.setState({ loading: false });
+            authenticate(response.data, () => {
+                this.setState({ redirectToReferer: true });
+            });
+        }).catch(err => {
+            this.setState({ loading: false });
+            console.log(err.response);
+            this.setState({ error: "There was error in logging in, please try again." });
       });
   };
 
