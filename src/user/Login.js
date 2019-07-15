@@ -1,28 +1,30 @@
-import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
-import { login , authenticate , isAuthenticated } from '../auth';
+import React, { Component } from "react";
+import { Redirect } from "react-router-dom";
+import { login, authenticate, isAuthenticated } from "../auth";
+
+import "./Login.css";
 
 class Login extends Component {
-    constructor() {
-        super()
-        this.state = {
-            email: "",
-            password: "",
-            error: "",
-            redirectToReferer: false,
-            loading: false
-        }
-    }
+  constructor() {
+    super();
+    this.state = {
+      email: "",
+      password: "",
+      error: "",
+      redirectToReferer: false,
+      loading: false
+    };
+  }
 
-    handleChange = name => event => {
-        this.setState({ error: "" });
-        this.setState({ [name]: event.target.value });
-    }
+  handleChange = name => event => {
+    this.setState({ error: "" });
+    this.setState({ [name]: event.target.value });
+  };
 
-    clickSubmit = event => {
-        event.preventDefault();
-        this.setState({ loading: true });
-        const { email, password } = this.state;
+  clickSubmit = event => {
+    event.preventDefault();
+    this.setState({ loading: true });
+    const { email, password } = this.state;
 
         const user = {
             email,
@@ -38,63 +40,94 @@ class Login extends Component {
             this.setState({ loading: false });
             console.log(err.response);
             this.setState({ error: "There was error in logging in, please try again." });
-        });
-    }
+      });
+  };
 
-    loginForm = (email, password) => (
-        <form>
+  loginForm = (email, password) => (
+    <div className="col-md-4 col-md-offset-4" id="login">
+      <section id="inner-wrapper" className="login">
+        <article>
+          <form>
             <div className="form-group">
-                <label className="text-muted">Email</label>
-                <input onChange={this.handleChange("email")}
-                    type="email"
-                    className="form-control"
-                    value={email}>
-                </input>
+              <div className="input-group">
+                <span className="input-group-addon">
+                  <i className="fa fa-envelope"> </i>
+                </span>
+                <input
+                  onChange={this.handleChange("email")}
+                  type="email"
+                  className="form-control"
+                  value={email}
+                  placeholder="Email Address"
+                />
+              </div>
             </div>
             <div className="form-group">
-                <label className="text-muted">Password</label>
-                <input onChange={this.handleChange("password")}
-                    type="password"
-                    className="form-control"
-                    value={password}>
-                </input>
+              <div className="input-group">
+                <span className="input-group-addon">
+                  <i className="fa fa-key"> </i>
+                </span>
+                <input
+                  onChange={this.handleChange("password")}
+                  type="password"
+                  className="form-control"
+                  value={password}
+                  placeholder="Password"
+                />
+              </div>
             </div>
-            <button onClick={this.clickSubmit} className="btn btn-raised btn-primary">
-                Login
+            <button
+              type="submit"
+              className="btn btn-primary btn-block"
+              onClick={this.clickSubmit}
+            >
+              Login
             </button>
-        </form>
-    );
-
-    render() {
-        const { email, password, error, redirectToReferer, loading } = this.state;
-
-        if(isAuthenticated()){
-            return <Redirect to="/" />
-        }
-
-        if (redirectToReferer) {
-            return <Redirect to="/" />
-        }
-
-        return (
-            <div className="container">
-                <h2 className="mt-5 mb-5">Login</h2>
-
-                <div className="alert alert-danger" style={{ display: error ? "" : "none" }}>
-                    {error}
-                </div>
-
-                {loading ?
-                    <div className="jumbotron text-center">
-                        <h2>Loading...</h2>
-                    </div> : (
-                        ""
-                    )}
-
-                {this.loginForm(email, password)}
+            <div className="forgot">
+              <a href="">Forget Password?</a> | <a href="">New User?</a>
             </div>
-        );
+          </form>
+        </article>
+      </section>
+    </div>
+  );
+
+  render() {
+    const { email, password, error, redirectToReferer, loading } = this.state;
+
+    if (isAuthenticated()) {
+      return <Redirect to="/" />;
     }
+
+    if (redirectToReferer) {
+      return <Redirect to="/" />;
+    }
+
+    return (
+      <div className="container">
+        <h2 className="mt-5 mb-5">Login</h2>
+
+        <div
+          className="alert alert-danger"
+          style={{ display: error ? "" : "none" }}
+        >
+          {error}
+        </div>
+
+        {loading ? (
+          <div class="text-center">
+            <div class="spinner-border" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
+        ) : (
+          ""
+        )}
+
+        {this.loginForm(email, password)}
+      </div>
+    );
+  }
 }
 
 export default Login;

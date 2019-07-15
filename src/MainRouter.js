@@ -6,6 +6,7 @@ import Signup from './user/Signup';
 import Login from './user/Login';
 import TestPage from './user/TestPage';
 import Chat from './user/Chat';
+import OfferFood from "./core/OfferFood";
 
 const MainRouter = () => (
     <div>
@@ -16,6 +17,7 @@ const MainRouter = () => (
             <Route exact path="/login" component={Login}></Route>    
             <Route exact path="/testpage" component={TestPage}></Route>
             <Route exact path="/chat" component={Chat}></Route>
+            <Route exact path="/offerFood" component={OfferFood} />
         </Switch>
     </div>
 );
