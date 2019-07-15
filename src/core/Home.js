@@ -1,7 +1,6 @@
 import React from "react";
 import "./Home.css";
-import OfferFood from "./OfferFood";
-import { Link, withRouter } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Home = () => (
   <div className="row App__Aside">

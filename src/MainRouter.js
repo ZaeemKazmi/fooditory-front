@@ -7,19 +7,29 @@ import Login from './user/Login';
 import TestPage from './user/TestPage';
 import Chat from './user/Chat';
 import OfferFood from "./core/OfferFood";
+import UserProfileTemplate from "./core/UserProfileTemplate";
+import OffersAndReviewsView from './core/OffersAndReviewsView';
+import SubmitRatingView from './core/SubmitRatingView';
+
 
 const MainRouter = () => (
-    <div>
-        <Menu />
-        <Switch>
-            <Route exact path="/" component={Home}></Route> 
-            <Route exact path="/signup" component={Signup}></Route>    
-            <Route exact path="/login" component={Login}></Route>    
-            <Route exact path="/testpage" component={TestPage}></Route>
-            <Route exact path="/chat" component={Chat}></Route>
-            <Route exact path="/offerFood" component={OfferFood} />
-        </Switch>
-    </div>
+  <div>
+    <Menu />
+    <Switch>
+      <Route exact path="/" component={Home} />
+      <Route exact path="/signup" component={Signup} />
+      <Route exact path="/login" component={Login} />
+      <Route exact path="/testpage" component={TestPage} />
+      <Route exact path="/offerFood" component={OfferFood} />
+      <Route exact path="/chat" component={Chat} />
+      <Route exact path="/users/:user_id" render={(props) => 
+        <UserProfileTemplate {...props} contentComponent={OffersAndReviewsView} />
+      } />
+      <Route exact path="/users/:user_id/review" render={(props) => 
+        <UserProfileTemplate {...props} contentComponent={SubmitRatingView} />
+      } />
+    </Switch>
+  </div>
 );
 
 export default MainRouter;
