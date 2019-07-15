@@ -37,6 +37,7 @@ class OfferFood extends Component {
 
   clickSubmit = event => {
     event.preventDefault();
+    var sellerId = JSON.parse(localStorage.getItem("jwt")).user._id;
 
     const {
       name,
@@ -61,6 +62,7 @@ class OfferFood extends Component {
     var self = this;
 
     var bodyFormData = new FormData();
+    bodyFormData.set("sellerId", sellerId);
     bodyFormData.set("name", this.state.name);
     bodyFormData.set("ingredients", this.state.ingredients);
     bodyFormData.set("cuisine", this.state.cuisine);

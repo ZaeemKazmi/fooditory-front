@@ -96,8 +96,6 @@ class Signup extends Component {
           accommName: "",
           accommStreet: "",
           accommZipcode: "",
-          accommCity: "",
-          accommCountry: "",
           error: "",
           open: false
         });
