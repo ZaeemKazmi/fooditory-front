@@ -53,7 +53,10 @@ class OfferFood extends Component {
       this.setState({ chips: chips });
       e.target.value = "";
       var obj = label;
-      this.setState({ ingredients: this.state.ingredients + obj + " " });
+      if (!this.state.ingredients.includes(obj)) {
+        this.setState({ ingredients: this.state.ingredients + obj + " " });
+      }
+
       this.setState({ counter: 1 });
     }
   };
@@ -95,6 +98,7 @@ class OfferFood extends Component {
       .then(function(response) {
         self.setState({
           name: "",
+          ingredients: "",
           chips: [{ label: "Enter an ingredient", id: "1" }],
           cuisine: "",
           price: "",
@@ -134,7 +138,7 @@ class OfferFood extends Component {
             {this.state.chips.map(chip => (
               <Chip
                 id={chip.id}
-                key={Math.random() + chip.id}
+                key={Math.random()}
                 label={chip.label}
                 trailingIcon={<FontAwesomeIcon icon={faBackspace} />}
               />
