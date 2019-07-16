@@ -3,12 +3,13 @@ import { Redirect } from 'react-router-dom';
 import io from "socket.io-client";
 import classes from "./Chat.css";
 import Style from 'style-it';
+import $ from "jquery";
 // import update from 'immutability-helper';
 
 import { isAuthenticated } from '../auth';
 import { loadConversations } from '../utils/chat';
 import { getUsername } from '../utils/user';
-import { getItem } from '../utils/item';
+import { getItem, updateItem } from '../utils/item';
 
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -83,7 +84,11 @@ class Chat extends Component {
 
     checkIfAlreadyMessged(itemId, personId) {
         let i;
+        console.log("In checkIfAlreadyMessged", this.state.chats)
         for (i in (this.state.chats)) {
+            console.log("XXX00", Object.values(this.state.chats[i])[0])
+            console.log("XXXXX", itemId, Object.values(this.state.chats[i])[0]["itemId"])
+            console.log("XXXX1", personId, Object.values(this.state.chats[i])[0]["sellerId"], Object.values(this.state.chats[i])[0]["buyerId"])
             if ((Object.values(this.state.chats[i])[0]["itemId"] === itemId) &&
                 ((Object.values(this.state.chats[i])[0]["sellerId"] === personId) ||
                     (Object.values(this.state.chats[i])[0]["buyerId"] === personId))) {
@@ -148,7 +153,7 @@ class Chat extends Component {
             // console.log("Should delete", obj)
             this.setState({ chats: copyChatState, textValue: '' })
         } else {
-            console.log("Cant remove haha")
+            // console.log("Cant remove haha")
             this.setState({ textValue: '' });
         }
     }
@@ -156,16 +161,16 @@ class Chat extends Component {
     sendChatAction = (chatId, itemId, senderId, senderName, msg) => {
         // console.log(value);
         let receiverId;
-        
+
         const conversation = this.getConversation(chatId);
-        if (conversation.buyerId === senderId){
+        if (conversation.buyerId === senderId) {
             receiverId = conversation.sellerId;
         }
         else receiverId = conversation.buyerId;
 
         const itemName = conversation.itemName;
         msg = msg.trim();
-         
+
         if (msg !== "") {
             const data = {
                 chatId,
@@ -176,7 +181,7 @@ class Chat extends Component {
                 receiverId,
                 msg
             };
-            console.log("toSend",data)
+            console.log("toSend", data)
 
             socket.emit('private_message', data, (error) => {
                 if (!error) {
@@ -196,7 +201,7 @@ class Chat extends Component {
 
 
 
-    insertChat = (chatId, itemId, itemName, sellerId, sellerName, buyerId, buyerName, messages, availability, soldTo) => {
+    insertChat = (chatId, itemId, itemName, sellerId, sellerName, buyerId, buyerName, messages, available, soldTo) => {
         return this.pushToAry(chatId, {
             'itemId': itemId,
             'itemName': itemName,
@@ -205,7 +210,7 @@ class Chat extends Component {
             'buyerId': buyerId,
             'buyerName': buyerName,
             'messages': messages,
-            'availability': availability,
+            'available': available,
             'soldTo': soldTo
         });
     }
@@ -220,7 +225,7 @@ class Chat extends Component {
 
 
     insertMessageInChat = (chatId, senderId, senderName, msg) => {
-        console.log(this.state.chats)
+        // console.log(this.state.chats)
         const newMessage = this.createMessage(senderId, senderName, msg);
 
         this.setState({
@@ -228,11 +233,11 @@ class Chat extends Component {
                 if (Object.keys(chat)[0] === chatId) {
                     chat[chatId].messages = [...chat[chatId].messages, newMessage]
                 }
-                console.log("Inside 2 the impossible map")
+                // console.log("Inside 2 the impossible map")
                 return chat;
             })
         });
-        console.log("after insert", this.state.chats)
+        // console.log("after insert", this.state.chats)
     }
     // react components default methods
 
@@ -280,7 +285,7 @@ class Chat extends Component {
 
                 getItem(loggedInUser.token, chat.itemId).then(res => {
                     console.log("itemsTableResponse", res.data)
-                    chat["availability"] = res.data.status;
+                    chat["available"] = res.data.status;
                     chat["soldTo"] = res.data.buyerId;
                     chat["itemName"] = res.data.name;
                     getUsername(otherUserId).then(res => {
@@ -304,10 +309,10 @@ class Chat extends Component {
                         console.log(chat)
                         //Have to modify loadConversations api, such that it sends Item Name as well
                         if (role === 'seller') {
-                            chatToInsert = this.insertChat(chat._id, chat.itemId, chat.itemName, chat.sellerId, res.data.name, chat.buyerId, loggedInUser.user.name, newMessages, chat.availability, chat.soldTo)
+                            chatToInsert = this.insertChat(chat._id, chat.itemId, chat.itemName, chat.sellerId, res.data.name, chat.buyerId, loggedInUser.user.name, newMessages, chat.available, chat.soldTo)
                         }
                         else {
-                            chatToInsert = this.insertChat(chat._id, chat.itemId, chat.itemName, chat.sellerId, loggedInUser.user.name, chat.buyerId, res.data.name, newMessages, chat.availability, chat.soldTo)
+                            chatToInsert = this.insertChat(chat._id, chat.itemId, chat.itemName, chat.sellerId, loggedInUser.user.name, chat.buyerId, res.data.name, newMessages, chat.available, chat.soldTo)
                         }
                         // console.log(chatToInsert)
                         loadedState.push(chatToInsert)
@@ -330,37 +335,32 @@ class Chat extends Component {
             // this.setState({ error: err.response.data.error });
         });
 
+        setTimeout(() => {
+            console.log('Hello, World!')
 
-        const { newChat } = this.props.location;
 
-        if (newChat !== undefined) {
+            const { newChat } = this.props.location;
 
-            // pushToAry(newChat.itemId, {
-            //     itemName: newChat.itemName,
-            //     sellerId: newChat.sellerId,
-            //     sellerName: newChat.sellerName,
-            //     buyerId: loggedInUser.user._id,
-            //     buyerName: loggedInUser.user.name,
-            //     messages: []
-            // });
-            const chatIdIfExists = this.checkIfAlreadyMessged(newChat.itemId, newChat.sellerId);
-            console.log(chatIdIfExists)
-            if (chatIdIfExists !== null) {
-                console.log("Chat " + chatIdIfExists + "already exists for " + newChat.itemId)
-                this.setState({ activeChat: chatIdIfExists });
-            } else {
-                const tempNewChat = this.insertChat(ObjectID().toString(), newChat.itemId, newChat.itemName, newChat.sellerId, newChat.sellerName, loggedInUser.user._id, loggedInUser.user.name, [], true, "")
+            if (newChat !== undefined) {
+                const chatIdIfExists = this.checkIfAlreadyMessged(newChat.itemId, newChat.sellerId);
+                console.log("chatIdIfExists", chatIdIfExists)
+                if (chatIdIfExists !== null) {
+                    console.log("Chat " + chatIdIfExists + "already exists for " + newChat.itemId)
+                    this.setState({ activeChat: chatIdIfExists });
+                } else {
+                    const tempNewChat = this.insertChat(ObjectID().toString(), newChat.itemId, newChat.itemName, newChat.sellerId, newChat.sellerName, loggedInUser.user._id, loggedInUser.user.name, [], true, "")
 
-                console.log("tempNewChatSend", tempNewChat)
-                const newConvo = [tempNewChat, ...this.state.chats]
-                console.log("newConvoStartByMe", newConvo)
-                this.setState((state) => {
-                    return {
-                        chats: [tempNewChat, ...state.chats]
-                    };
-                });
+                    console.log("tempNewChatSend", tempNewChat)
+                    const newConvo = [tempNewChat, ...this.state.chats]
+                    console.log("newConvoStartByMe", newConvo)
+                    this.setState((state) => {
+                        return {
+                            chats: [tempNewChat, ...state.chats]
+                        };
+                    });
+                }
             }
-        }
+        }, 5000);
     }
 
     componentDidMount() {
@@ -371,7 +371,7 @@ class Chat extends Component {
         }
 
         socket.on(loggedInUser.user._id, (data) => {
-            console.log("onReceive",data);
+            console.log("onReceive", data);
 
             const senderName = this.getSenderName(this.state.chats, this.state.activeChat, data.senderId);
 
@@ -416,6 +416,13 @@ class Chat extends Component {
 
     chatForm = (textValue) => (
         <div className="flex">
+            <Button
+                onClick={this.clearTextfieldAction}
+                variant="contained"
+                color="primary"
+                className="button">
+                Clear
+            </Button>
             <TextField
                 label="Send a chat message"
                 onChange={this.handleChange("textValue")}
@@ -426,13 +433,6 @@ class Chat extends Component {
                 rowsMax="5"
             //margin="normal"
             />
-            <Button
-                onClick={this.clearTextfieldAction}
-                variant="contained"
-                color="primary"
-                className="button">
-                Clear
-          </Button>
             <Button
                 variant="contained"
                 color="primary"
@@ -452,30 +452,77 @@ class Chat extends Component {
         </div>
     );
 
+    handleSoldFood = () => {
+        $('#confirmSellHidden').show();
+        $('#sellButton').attr("disabled", true);
+        $('#sellButton').attr("disableFocusRipple", true);
+    }
+
+    handlCancelSoldFood = () => {
+        console.log("In cancel sold --- that was a mistake");
+        $('#confirmSellHidden').hide();
+        $('#sellButton').attr("disabled", false);
+        $('#sellButton').attr("disableFocusRipple", false);
+    }
+
+    handleConfirmSoldFood = () => {
+        console.log("Confirm sold was pressed");
+        const activeChat = this.state.activeChat;
+        const currectActiveChatData = this.getActiveChatSellerInfo();
+        const status = false;
+        const buyerId = currectActiveChatData.buyerId;
+        updateItem(loggedInUser.token, currectActiveChatData.itemId, { status, buyerId }).then(res => {
+            console.log("UpdateDbResponse", res);
+            this.setState({
+                chats: this.state.chats.map((chat, index) => {
+                    if (Object.values(chat)[0].itemId === currectActiveChatData.itemId) {
+                        Object.values(chat)[0].available = status
+                    }
+                    if (Object.keys(chat)[0] === activeChat) {
+                        Object.values(chat)[0].soldTo = buyerId;
+                    }
+
+                    return chat;
+                })
+            });
+        }).catch(err => { console.log(err) });
+
+
+        // console.log("Sold status updated", this.state.chats)
+
+        $('#confirmSellHidden').hide();
+        $('#sellButton').attr("disabled", false);
+        $('#sellButton').attr("disableFocusRipple", false);
+    }
+
     sellingForm = (name) => (
-        <div className="flex sellFoodBox">
+        <div className="flex" id="sellFoodBox">
             <div className="flex sellDiv">
                 <Typography variant="body1" gutterBottom className="" >Have you sold this item to {name} ?</Typography>
                 <Button
                     variant="contained"
                     color="primary"
-                    className="button">
+                    className="button"
+                    id="sellButton"
+                    onClick={this.handleSoldFood}>
                     Sold
                 </Button>
             </div>
-            <div className="flex confirmSell">
+            <div className="flex" id="confirmSellHidden">
                 <Typography variant="body1" gutterBottom className="" >Can you please confirm your action once again</Typography>
                 <Button
                     variant="contained"
                     color="primary"
-                    className="button">
-                    Confirm
+                    className="button"
+                    onClick={this.handlCancelSoldFood}>
+                    Cancel
                 </Button>
                 <Button
                     variant="contained"
                     color="primary"
-                    className="button">
-                    Cancel
+                    className="button"
+                    onClick={this.handleConfirmSoldFood}>
+                    Confirm
                 </Button>
             </div>
         </div>
@@ -557,26 +604,31 @@ class Chat extends Component {
             width: 85%;
         }
 
-        .sellFoodBox {
+        #sellFoodBox {
             display: block;
+            justify-content: center;
         }
         
-        .sellDiv {
+        #sellDiv {
             white-space: pre-line;
+            justify-content: center;
+            margin-top: 30px;
         }
         
-        .confirmSellHidden {
+        #confirmSellHidden {
             display: block;
-            visibility: hidden;
+            display: none;
+            justify-content: center;
         }
 
-        .confirmSellVisible {
+        #confirmSellVisible {
             display: block;
-            visibility: hidden;
+            
         }
 
         .button {
             width: 15%;
+            margin: 10px;
         }
         `,
             <div>
@@ -624,12 +676,15 @@ class Chat extends Component {
                         </div>
                     </div>
                     {this.chatForm(textValue)}
-
-
-
                     {/* {console.log("last",this.getActiveChatSellerInfo()["sellerName"])} */}
-                    {this.getActiveChatSellerInfo().sellerId === loggedInUser.user._id ? this.sellingForm(this.getActiveChatSellerInfo().buyerName) : ""}
                 </Paper>
+                {(this.getActiveChatSellerInfo().sellerId === loggedInUser.user._id)
+                    ? ((this.getActiveChatSellerInfo().available === true)
+                        ? this.sellingForm(this.getActiveChatSellerInfo().buyerName)
+                        : (this.getActiveChatSellerInfo().buyerId === this.getActiveChatSellerInfo().soldTo)
+                            ? "You have already sold this item to " + this.getActiveChatSellerInfo().buyerName + "."
+                            : "This item is no longer available.")
+                    : ""}
             </div>
         );
     }
