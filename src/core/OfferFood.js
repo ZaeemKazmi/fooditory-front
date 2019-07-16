@@ -107,11 +107,17 @@ class OfferFood extends Component {
           error: "",
           open: false
         });
-        console.log(response);
+        if ((response.state = 201)) {
+          self.setState({ open: true });
+        }
       })
       .catch(function(response) {
         //handle error
-        console.log(response);
+        if ((response.state = 500)) {
+          self.setState({
+            error: "An error occured during item creation. Please try again."
+          });
+        }
       });
   };
 
