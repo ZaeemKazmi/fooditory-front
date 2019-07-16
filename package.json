@@ -18,7 +18,8 @@
     "reactstrap": "^8.0.0",
     "socket.io": "^2.2.0",
     "socket.io-client": "^2.2.0",
-    "style-it": "^2.1.4"
+    "style-it": "^2.1.4",
+    "reactstrap": "^8.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
