@@ -13,6 +13,17 @@ import SubmitRatingView from './core/SubmitRatingView';
 import Offers from "./core/Offers";
 import Browse from "./core/Browse";
 
+const axios = require('axios');
+
+(function() {
+  let token = JSON.parse(localStorage.getItem('jwt')).token;
+
+  if (token) {
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+  } else {
+    axios.defaults.headers.common['Authorization'] = null;
+  }
+})();
 
 const MainRouter = () => (
   <div>
