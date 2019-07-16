@@ -1,6 +1,8 @@
 import React from 'react';
 import Styled from 'styled-components';
 
+import RoundButton from './RoundButton';
+
 
 class PlainFoodOffer extends React.Component {
   render() {
@@ -8,10 +10,13 @@ class PlainFoodOffer extends React.Component {
       <div className={this.props.className}>
         <img src={`http://localhost:8080/${this.props.image}`} alt=""/>
         <div className="offer-details">
-          <b>{this.props.name}</b><br/>
-          Price: {this.props.price}{this.props.currency}<br/>
-          Cuisine: {this.props.cuisine}<br/>
-          Ingredients: {this.props.ingredients}<br/>
+          <div>
+            <b>{this.props.name}</b><br/>
+            Price: {this.props.price}{this.props.currency}<br/>
+            Cuisine: {this.props.cuisine}<br/>
+            Ingredients: {this.props.ingredients}<br/>
+          </div>
+          <RoundButton id="message">message</RoundButton>
         </div>
       </div>
     );
@@ -36,6 +41,14 @@ const FoodOffer = Styled(PlainFoodOffer)`
     line-height: 2em;
     font-weight: bold;
     color: black;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  #message {
+    background-color: #21B4C6;
+    border-color: #21B4C6;
   }
 `;
 export default FoodOffer;

@@ -11,14 +11,30 @@ class PlainProfileView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: JSON.parse(localStorage.getItem('jwt')).user
+      user: {},
+      accommodation: {}
     };
+  }
+
+  componentDidMount() {
+    axios.get(`http://127.0.0.1:8080/user/${this.props.user_id}`)
+      .then(
+        (result) => {
+          this.setState({
+            user: result.data,
+            accommodation: result.data.accommodation
+          });
+        },
+        (error) => {
+          console.log(error);
+        }
+      )
   }
 
   render() {
     return (
       <div className={this.props.className}>
-        <img id="profile-image" alt="" style={{backgroundImage: `url(http://localhost:8080/users/${this.state.user._id}/avatar)`}}/>
+        <img id="profile-image" alt="" style={{backgroundImage: `url(http://localhost:8080/users/${this.props.user_id}/avatar)`}}/>
         <span id="profile-name">
           {this.state.user.name}
         </span>
@@ -30,13 +46,12 @@ class PlainProfileView extends React.Component {
         </span>
 
         <div id="message-review-buttons">
-          <RoundButton id="message">message</RoundButton>
           <RoundButton id="review" onClick={() => this.props.history.push(`${this.state.user._id}/review`)}>review</RoundButton>
         </div>
 
         <div className="text-center">
-          Lives in: Olympic Village<br/>
-          From: Azerbaijan
+          Lives in: {this.state.accommodation.name}<br/>
+          From: {this.state.user.countryOfOrigin}
         </div>
       </div>
     );
@@ -66,11 +81,6 @@ const ProfileView = Styled(PlainProfileView)`
   #profile-name {
     font-weight: bold;
     font-size: 1.2em;
-  }
-
-  #message-review-buttons {
-    display: flex;
-    justify-content: space-between;
   }
 
   #message {
