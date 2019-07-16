@@ -10,6 +10,8 @@ import OfferFood from "./core/OfferFood";
 import UserProfileTemplate from "./core/UserProfileTemplate";
 import OffersAndReviewsView from './core/OffersAndReviewsView';
 import SubmitRatingView from './core/SubmitRatingView';
+import Offers from "./core/Offers";
+import Browse from "./core/Browse";
 
 
 const MainRouter = () => (
@@ -22,6 +24,9 @@ const MainRouter = () => (
       <Route exact path="/testpage" component={TestPage} />
       <Route exact path="/offerFood" component={OfferFood} />
       <Route exact path="/chat" component={Chat} />
+      <Route exact path="/offers" component={Offers} />
+      <Route exact path="/browse" component={Browse} />
+
       <Route exact path="/users/:user_id" render={(props) => 
         <UserProfileTemplate {...props} contentComponent={OffersAndReviewsView} />
       } />
@@ -30,6 +35,5 @@ const MainRouter = () => (
       } />
     </Switch>
   </div>
-);
 
 export default MainRouter;

@@ -23,7 +23,7 @@ const Home = () => (
     <div className="col-md-6 rightSide">
       {" "}
       <div className="box">
-        <Link className="link" to="/">
+        <Link className="link" to="/Browse">
           {" "}
           Buy Food
         </Link>
