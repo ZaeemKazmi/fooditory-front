@@ -35,5 +35,6 @@ const MainRouter = () => (
       } />
     </Switch>
   </div>
+);
 
 export default MainRouter;
