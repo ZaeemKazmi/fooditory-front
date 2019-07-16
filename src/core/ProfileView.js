@@ -5,33 +5,20 @@ import { withRouter } from 'react-router-dom';
 import RatingStars from './RatingStars.js';
 import RoundButton from './RoundButton';
 
+const axios = require('axios');
+
 class PlainProfileView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: {}
+      user: JSON.parse(localStorage.getItem('jwt')).user
     };
-  }
-
-  componentDidMount() {
-    fetch(`http://127.0.0.1:8080/users/${this.props.user_id}/`)
-      .then(res => res.json())
-      .then(
-        (result) => {
-          this.setState({
-            user: result
-          });
-        },
-        (error) => {
-          console.log(error);
-        }
-      )
   }
 
   render() {
     return (
       <div className={this.props.className}>
-        <img id="profile-image" alt="" style={{backgroundImage: `url(http://localhost:8080/${this.state.user.image})`}}/>
+        <img id="profile-image" alt="" style={{backgroundImage: `url(http://localhost:8080/users/${this.state.user._id}/avatar)`}}/>
         <span id="profile-name">
           {this.state.user.name}
         </span>

@@ -16,10 +16,10 @@ import Browse from "./core/Browse";
 const axios = require('axios');
 
 (function() {
-  let token = JSON.parse(localStorage.getItem('jwt')).token;
+  let jwt = JSON.parse(localStorage.getItem('jwt'));
 
-  if (token) {
-    axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+  if (jwt) {
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + jwt.token;
   } else {
     axios.defaults.headers.common['Authorization'] = null;
   }
