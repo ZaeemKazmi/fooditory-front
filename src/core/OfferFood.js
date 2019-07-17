@@ -1,10 +1,8 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
-import { offerFood, authenticate, isAuthenticated } from "../auth";
+import { isAuthenticated } from "../auth";
 import { ChipSet, Chip } from "@material/react-chips";
 import "@material/react-chips/dist/chips.css";
-import MaterialIcon, { colorPalette } from "material-icons-react";
-import Icon from "@material-ui/core/Icon";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBackspace } from "@fortawesome/free-solid-svg-icons";
 
@@ -180,9 +178,14 @@ class OfferFood extends Component {
           className="form-control"
         />
       </div>
-      <button onClick={this.clickSubmit} className="btn btn-raised btn-primary">
-        Offer Food
-      </button>
+      <div className="text-center">
+        <button
+          onClick={this.clickSubmit}
+          className="btn btn-raised btn-primary"
+        >
+          Offer Food
+        </button>
+      </div>
     </form>
   );
   onKeyPress(event) {
