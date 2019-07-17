@@ -46,7 +46,12 @@ class PlainProfileView extends React.Component {
         </span>
 
         <div id="message-review-buttons">
-          <RoundButton id="review" onClick={() => this.props.history.push(`${this.state.user._id}/review`)}>review</RoundButton>
+        {
+          this.state.user.allowReview ?
+          (<RoundButton id="review" onClick={() => this.props.history.push(`${this.state.user._id}/review`)}>review</RoundButton>)
+          :
+          ('')
+        }
         </div>
 
         <div className="text-center">
