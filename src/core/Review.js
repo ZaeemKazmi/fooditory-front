@@ -3,15 +3,36 @@ import Styled from 'styled-components';
 
 import RatingStars from './RatingStars';
 
+const axios = require('axios');
 
 class PlainReview extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state ={
+      buyer: { stars: 0 }
+    }
+  }
+  componentDidMount() {
+    axios.get(`http://127.0.0.1:8080/user/${this.props.userId}`)
+      .then(
+        (result) => {
+          this.setState({
+            buyer: result.data
+          });
+        },
+        (error) => {
+          console.log(error);
+        }
+      )
+  }
+
   render() {
     return (
       <div className={this.props.className}>
         <div className="user-picture-name">
           <div id="profile-image" style={{backgroundImage: `url(http://localhost:8080/users/${this.props.userId}/avatar)`}}/>
           <div id="profile-name">
-            Gordon Ramsey
+            {this.state.buyer.name}
           </div>
         </div>
 
@@ -19,7 +40,7 @@ class PlainReview extends React.Component {
           <div className="review-title">
             {this.props.title}
           </div>
-          <RatingStars totalStars="5" stars="2" static/>
+          <RatingStars totalStars="5" stars={this.state.buyer.stars} static/>
           <div className="review-date">01.06.2019</div>
           <div className="review-body">
             {this.props.comment}

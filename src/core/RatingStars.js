@@ -11,6 +11,12 @@ class PlainRatingStars extends React.Component {
     };
   }
 
+  componentWillReceiveProps(props) {
+    this.setState({
+      activeStarsValue: props.stars
+    });
+  }
+
   starMouseEnter(event) {
     let starValue = Number(event.target.getAttribute('value'));
     this.setState({activeStarsValue: starValue});
