@@ -9,7 +9,7 @@ class PlainReview extends React.Component {
     return (
       <div className={this.props.className}>
         <div className="user-picture-name">
-          <div id="profile-image"/>
+          <div id="profile-image" style={{backgroundImage: `url(http://localhost:8080/users/${this.props.userId}/avatar)`}}/>
           <div id="profile-name">
             Gordon Ramsey
           </div>
@@ -45,7 +45,6 @@ const Review = Styled(PlainReview)`
   }
 
   #profile-image {
-    background-image: url("https://upload.wikimedia.org/wikipedia/commons/6/6f/Gordon_Ramsay.jpg");
     background-size: cover;
     background-repeat: no-repeat;
     height: 5em;

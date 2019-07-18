@@ -33,7 +33,7 @@ class PlainSubmitRatingView extends React.Component {
     }
 
     axios
-      .post("http://localhost:8080/review", postData)
+      .post(`http://localhost:8080/user/${this.props.username}/review`, postData)
       .then(response => {
         if (response.status >= 200 && response.status < 300) {
           this.props.history.push(`/users/${this.props.username}`);
@@ -47,24 +47,6 @@ class PlainSubmitRatingView extends React.Component {
         console.log("error", err);
         alert("Unexpected error occured");
       });
-
-    // fetch("http://localhost:8080/review", {
-    //   method: 'POST',
-    //   body: JSON.stringify(postData)
-    // })
-    // .then((resp) => {
-    //   if (resp.status >= 200 && resp.status < 300) {
-    //     this.props.history.push(`/users/${this.props.username}`);
-    //     this.setState({httpFailed: false});
-    //   }
-    //   else {
-    //     this.setState({httpFailed: true});
-    //   }
-    // })
-    // .catch((e) => {
-    //   console.log("error", e);
-    //   alert("Unexpected error occured");
-    // });
   }
 
   render() {
@@ -76,11 +58,11 @@ class PlainSubmitRatingView extends React.Component {
         <form onSubmit={this.handleFormSubmit}>
           <div className="form-field">
             <label>Headline</label><br/>
-            <input type="text" name="headline" required/>
+            <input type="text" name="title" required/>
           </div>
           <div className="form-field">
             <label>Write your review</label><br/>
-            <textarea rows="5" cols="50" name="review" required></textarea>
+            <textarea rows="5" cols="50" name="comment" required></textarea>
           </div>
           <RoundButton type="submit" id="submit">submit</RoundButton>
           <RoundButton type="button" id="cancel" onClick={() => this.props.history.push(`/users/${this.props.username}`) }>cancel</RoundButton>

@@ -22,7 +22,7 @@ class PlainOffersAndReviewsView extends React.Component {
         (result) => {
           this.setState({
             reviews: result.map((review, i) => (
-              <Review key={i} title={review.title} comment={review.comment}/>
+              <Review key={i} title={review.title} comment={review.comment} userId={review.buyerId}/>
             ))
           });
         },
