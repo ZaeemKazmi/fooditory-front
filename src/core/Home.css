@@ -18,6 +18,7 @@
 }
 .nav-link:hover{
   border: solid 1px #fff;
+  color: #fff;
 }
 .selection{
   margin-right: 400px;
