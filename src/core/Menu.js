@@ -12,6 +12,9 @@ const isActive = (history, path) => {
 const Menu = ({ history }) => (
 
   <nav class="navbar sticky-top">
+
+  <div className="container nav-wrapper">
+
   <a class="navbar-brand" href="/">
       <img className="logo" src={logo} />
   </a>
@@ -82,6 +85,8 @@ const Menu = ({ history }) => (
         </>
       )}
     </ul>
+  </div>
+
   </div>
 
   </nav>
