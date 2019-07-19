@@ -1,9 +1,99 @@
-.App__Aside {
-  width: 101%;
-  background-color: #032696;
-  opacity: 0.8;
-  margin-top: 0%;
+
+.logo{
+  padding: 0px;
+  margin: 0px 0px 0px 400px;
+  width: 200px;
 }
+.navbar{
+  background-color: #3e66ef;
+  margin: 0;
+  padding: 0;
+  font-size: 20px;
+  padding: none;
+  color: #fff;
+}
+.nav-link {
+  color: #fff;
+  text-decoration: none;
+}
+.nav-link:hover{
+  border: solid 1px #fff;
+}
+.selection{
+  margin-right: 400px;
+  border-bottom: none;
+}
+
+
+
+.landing{
+  margin-top: 25%;
+}
+
+.half_Page {
+  font-size: 32px;
+  line-break: 32px;
+  font-weight: 700;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  width: 100%;
+}
+
+.desctList {
+  margin-top: 5%;
+  color: #fff;
+  padding: 40px;
+}
+
+.offer-btn{
+  background-color: #4bc5d4;
+  padding: 10px 65px 10px 65px;
+  height: 50px; 
+  font-size: 64px; 
+  letter-spacing: 2.5px;
+  font-weight: 700;
+  color: #ffffff;
+  border: solid 2px;
+  border-color: #ffffff; 
+  border-radius: 50px;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
+}
+.offer-btn:hover {
+  text-decoration: none;
+  background-color: #ffffff;
+  box-shadow: 0px 15px 20px #3e66ef;
+  color: #4bc5d4;
+}
+
+.buy-btn{
+  background-color: #3e66ef;
+  padding: 10px 65px 10px 65px;
+  height: 50px; 
+  font-size: 64px; 
+  text-decoration: none;
+  letter-spacing: 2.5px;
+  font-weight: 700;
+  color: #ffffff;
+  border: solid 2px;
+  border-color: #ffffff; 
+  border-radius: 50px;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
+}
+.buy-btn:hover {
+  text-decoration: none;
+  background-color: #ffffff;
+  box-shadow: 0px 15px 20px #21b4c6;
+  color: #3e66ef;
+}
+
 
 img {
   padding: 0px;
@@ -12,84 +102,10 @@ img {
   width: 100%;
   height: 100%;
 }
-
-.leftSide {
-  /* opacity: 0.4;*/
-
-  background-image: url("https://images.unsplash.com/flagged/photo-1556742524-750f2ab99913?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80");
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-  height: 100vh;
-  width: 100%;
-}
-
-.rightSide {
-  /*opacity: 0.4;*/
-
-  background-image: url("https://www.retaildietitians.com/site/assets/files/11069/housefoodsimage.1500x900.jpg");
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-  height: 100vh;
-  width: 100%;
-}
-
 .fbutton {
   margin-top: 20%;
   height: 100px;
   margin-left: 40%;
   background-color: #032696 !important;
-  color: #fff;
-}
-
-.nav {
-  background-color: #3e66ef !important;
-}
-
-.rightList {
-  opacity: 1;
-  font-size: 25px;
-  margin-top: 5%;
-  margin-left: 30%;
-  color: #fff;
-  padding: 40px;
-}
-
-.leftList {
-  font-size: 25px;
-  margin-top: 5%;
-  margin-left: 30%;
-  color: #fff;
-  opacity: 1;
-  padding: 40px;
-}
-
-.nav-link {
-  color: #fff !important;
-}
-
-.nav-tabs .nav-link:hover,
-.nav-tabs .nav-link:focus {
-  border-color: #3e66ef !important ;
-}
-
-.box {
-  padding-top: 25%;
-  height: 30px;
-  border: 1px;
-}
-
-.link {
-  border: 1px solid;
-  border-color: #032696;
-  text-align: center;
-  background-color: #032696;
-  font-size: 25px;
-  padding-left: 20px;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  padding-right: 20px;
-  margin-left: 35%;
   color: #fff;
 }

@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, withRouter } from "react-router-dom";
 import { logout, isAuthenticated } from "../auth";
+import logo from './logo.png';
 import "./Home.css";
 
 const isActive = (history, path) => {
@@ -9,8 +10,14 @@ const isActive = (history, path) => {
 };
 
 const Menu = ({ history }) => (
+
+  <nav class="navbar sticky-top">
+  <a class="navbar-brand" href="/">
+      <img className="logo" src={logo} />
+  </a>
+
   <div>
-    <ul className="nav nav-tabs">
+    <ul className="nav selection">
       <li className="nav-item">
         <Link className="nav-link" style={isActive(history, "/")} to="/">
           Home
@@ -47,7 +54,7 @@ const Menu = ({ history }) => (
               className="nav-link"
               style={
                 (isActive(history, "/logout"),
-                { cursor: "pointer", color: "#fff" })
+                { cursor: "pointer"})
               }
               onClick={() => logout(() => history.push("/"))}
               to="/logout"
@@ -58,7 +65,7 @@ const Menu = ({ history }) => (
           <li className="nav-item">
             <a
               className="nav-link"
-              style={{ cursor: "pointer", color: "#fff" }}
+              style={{ cursor: "pointer"}}
             >
               {isAuthenticated().user.name}
             </a>
@@ -67,6 +74,8 @@ const Menu = ({ history }) => (
       )}
     </ul>
   </div>
+
+  </nav>
 );
 
 export default withRouter(Menu);
