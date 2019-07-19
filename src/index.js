@@ -5,6 +5,6 @@ import App from "./App";
 import "jquery";
 import "bootstrap/dist/css/bootstrap.css";
 
-import { Button } from "reactstrap";
+import "./index.css";
 
 ReactDOM.render(<App />, document.getElementById("root"));

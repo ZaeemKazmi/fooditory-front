@@ -7,9 +7,24 @@ import Login from "./user/Login";
 import TestPage from "./user/TestPage";
 import Chat from "./user/Chat";
 import OfferFood from "./core/OfferFood";
+import UserProfileTemplate from "./core/UserProfileTemplate";
+import OffersAndReviewsView from './core/OffersAndReviewsView';
+import SubmitRatingView from './core/SubmitRatingView';
 import Offers from "./core/Offers";
 import Browse from "./core/Browse";
 import UserItem from "./core/UserItem";
+
+const axios = require('axios');
+
+(function() {
+  let jwt = JSON.parse(localStorage.getItem('jwt'));
+
+  if (jwt) {
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + jwt.token;
+  } else {
+    axios.defaults.headers.common['Authorization'] = null;
+  }
+})();
 
 const MainRouter = () => (
   <div>
@@ -24,6 +39,13 @@ const MainRouter = () => (
       <Route exact path="/offers" component={Offers} />
       <Route exact path="/browse" component={Browse} />
       <Route exact path="/userItem" component={UserItem} />
+
+      <Route exact path="/users/:user_id" render={(props) => 
+        <UserProfileTemplate {...props} contentComponent={OffersAndReviewsView} />
+      } />
+      <Route exact path="/users/:user_id/review" render={(props) => 
+        <UserProfileTemplate {...props} contentComponent={SubmitRatingView} />
+      } />
     </Switch>
   </div>
 );

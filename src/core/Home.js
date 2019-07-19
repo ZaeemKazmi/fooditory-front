@@ -3,8 +3,7 @@ import offer from "./offer.png";
 import buy from "./buy.png";
 
 import "./Home.css";
-import OfferFood from "./OfferFood";
-import { Link, withRouter } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Home = () => (
   <div className="container-fluid">
