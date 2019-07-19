@@ -41,7 +41,6 @@ class Signup extends Component {
             : "";
         break;
       case "email":
-        console.log(emailRegex.test(event.target.value));
         emailerror = emailRegex.test(event.target.value)
           ? ""
           : "Invalid email address ";
@@ -68,22 +67,21 @@ class Signup extends Component {
     }
   };
   setAccomDetails = event => {
-    console.log(event.target.value);
-    if (event.target.value === "Accom1") {
+    if (event.target.value === "Chiemgaustraße") {
       this.setState({ accommName: "Chiemgaustraße" });
       this.setState({ accommStreet: "Traunsteiner Straße 1-13" });
       this.setState({ accommZipcode: "81549" });
       this.setState({ accommCity: "Munich" });
       this.setState({ accommCountry: "Germany" });
     }
-    if (event.target.value === "Accom2") {
+    if (event.target.value === "Heiglhofstraße") {
       this.setState({ accommName: "Heiglhofstraße" });
       this.setState({ accommStreet: "Heiglhofstraße 64, 65" });
       this.setState({ accommZipcode: "81377" });
       this.setState({ accommCity: "Munich" });
       this.setState({ accommCountry: "Germany" });
     }
-    if (event.target.value === "Accom3") {
+    if (event.target.value === "Stiftsbogen") {
       this.setState({ accommName: "Stiftsbogen" });
       this.setState({ accommStreet: "Schröfelhofstraße 4-26a" });
       this.setState({ accommZipcode: "81375" });
@@ -122,7 +120,7 @@ class Signup extends Component {
         country: accommCountry
       }
     };
-    console.log(user);
+    // console.log(user);
     var self = this;
     var bodyFormData = new FormData();
     bodyFormData.set("name", this.state.name);
@@ -136,9 +134,9 @@ class Signup extends Component {
     bodyFormData.set("accommCity", this.state.accommCity);
     bodyFormData.set("accommCountry", this.state.accommCountry);
 
-    for (var key of bodyFormData.entries()) {
+    /* for (var key of bodyFormData.entries()) {
       console.log(key[0] + ", " + key[1]);
-    }
+    }*/
     axios({
       method: "post",
       url: "http://localhost:8080/signup",
@@ -158,16 +156,15 @@ class Signup extends Component {
           error: "",
           open: false
         });
-        console.log(response);
+        //console.log(response);
         self.setState({ open: true });
       })
       .catch(err => {
         var errmsg = err.response.data.error;
         formError = nameError + emailerror + passwordError + imageError;
-        console.log(formError);
         if (formError === "") {
           self.setState({ error: "Fields cannot be blank" });
-          console.log(err.response.data);
+          // console.log(err.response.data);
           if (errmsg !== undefined) {
             if (JSON.stringify(err.response.data.error).includes("E11000")) {
               this.setState({ error: "Email already exist!" });
@@ -240,15 +237,19 @@ class Signup extends Component {
           value={this.state.value}
           onChange={this.setAccomDetails}
         >
-          <option value="accom1">Chiemgaustraße</option>
-          <option alue="accom2">Heiglhofstraße</option>
-          <option alue="accom3">Stiftsbogen</option>
+          <option value="Chiemgaustraße">Chiemgaustraße</option>
+          <option alue="Heiglhofstraße">Heiglhofstraße</option>
+          <option alue="Stiftsbogen">Stiftsbogen</option>
         </select>
       </div>
-
-      <button onClick={this.clickSubmit} className="btn btn-raised btn-primary">
-        Register
-      </button>
+      <div className="text-center">
+        <button
+          onClick={this.clickSubmit}
+          className="btn btn-raised btn-primary"
+        >
+          Register
+        </button>
+      </div>
     </form>
   );
 

@@ -1,4 +1,9 @@
 import React from 'react';
+import { Redirect } from "react-router-dom";
+import { isAuthenticated } from "../auth";
+import "@material/react-chips/dist/chips.css";
+import { updateItem } from "../utils/item";
+
 import "./Offers.css";
 
 
@@ -7,28 +12,84 @@ import food2 from './food2.jpg';
 import food3 from './food3.jpg';
 import food4 from './food4.jpg';
 
+import "./OfferFood.css";
+const axios = require("axios");
+
+let loggedInUser;
+
+
+
+
 class Offers extends React.Component {
-    render() {
-      return (
 
-        <div className={this.props.className}>
-          <img src={`http://localhost:8080/${this.props.image}`} alt=""/>
-          <div className="offer-details">
-            <div>
-              <b>{this.props.name}</b><br/>
-              Price: {this.props.price}{this.props.currency}<br/>
-              Cuisine: {this.props.cuisine}<br/>
-              Ingredients: {this.props.ingredients}<br/>
-            </div>
-            {/* <RoundButton id="message">message</RoundButton> */}
-          </div>
-        </div>
+        constructor() {
+            super();
+        
+            var self = this;
+            this.state = {
+              data: [],
+              status: null
+            };
+        
+            axios
+              .get("http://localhost:8080/userItems/" + isAuthenticated().user.id)
+              .then(function(response) {
+                self.setState({ data: response.data });
+              })
+              .catch(function(response) {
+                //handle error
+              });
+          }
+
+          render() {
+            return (
+              <div className="row">
+                {this.state.data.map((item, index) => {
+                  return (
 
 
+                    // <div className="card text-center" key={index}>
+                    //   <div className="card-body">{item.name}</div>
+                    //   <div className="card-body">
+                    //     <img style={{ width: "100px", height: "100px" }} src={"http://localhost:8080/" + item.image} />
+                    //   </div>
+                    // </div>
 
+                            <div class="col-md-6">
+                                <div class="offer-card" key={index}>
+                                    <img class="card-img-top" src={"http://localhost:8080/" + item.image} />
+                                    <div class="card-body">
+                                        <p class="card-text">
+                                        <table class="offer-details table-sm table-borderless">
+                                            
+                                            <tbody>
+                                                <tr>
+                                                    <td scope="row">Mikayil Murad</td>
+                                                    <td>price: {item.price}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">starts</td>
+                                                    <td>name: {item.name}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row"># reviews</td>
+                                                    <td>ingredients: <a className='ing-detail' href='#' >details</a></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        </p>
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            <button type="button" class="msg-btn">Message</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-      );
-    }
+                  );
+                })}
+              </div>
+            );
+          }
   }
 
 // const Offers = () => (

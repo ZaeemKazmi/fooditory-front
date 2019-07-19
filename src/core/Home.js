@@ -6,7 +6,8 @@ import OfferFood from "./OfferFood";
 import { Link, withRouter } from "react-router-dom";
 
 const Home = () => (
-  <div className="home-container">
+  // <div className="container">
+  <div className="container-fluid home-container">
     <div className="row App__Aside">
       <div className="col landing-back" style={{backgroundImage: `url(${landing})`}}>
 
