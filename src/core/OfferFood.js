@@ -8,7 +8,7 @@ import { faBackspace } from "@fortawesome/free-solid-svg-icons";
 
 import "./OfferFood.css";
 const axios = require("axios");
-
+var formError = "";
 class OfferFood extends Component {
   constructor() {
     super();
@@ -30,7 +30,29 @@ class OfferFood extends Component {
   };
 
   handleChange = name => event => {
-    this.setState({ error: "" });
+    switch (name) {
+      case "name":
+        formError =
+          event.target.value.length < 3
+            ? "Item name must be at least 3 characters."
+            : "";
+        break;
+      case "ingredients":
+        formError =
+          event.target.value.length < 1 ? "Ingredients cannot be blank." : "";
+        break;
+      case "cuisine":
+        formError =
+          event.target.value.length < 1 ? "Cuisine cannot be blank." : "";
+        break;
+      case "image":
+        formError =
+          event.target.files[0] === null ? "Image cannot be empty." : "";
+        break;
+      default:
+        break;
+    }
+
     this.setState({ open: false });
     this.setState({ [name]: event.target.value });
 
@@ -61,6 +83,7 @@ class OfferFood extends Component {
 
   clickSubmit = event => {
     event.preventDefault();
+
     var sellerId = JSON.parse(localStorage.getItem("jwt")).user._id;
 
     const { name, ingredients, chips, cuisine, price, image } = this.state;
@@ -110,11 +133,12 @@ class OfferFood extends Component {
         }
       })
       .catch(function(response) {
-        //handle error
-        if ((response.state = 500)) {
-          self.setState({
-            error: "An error occured during item creation. Please try again."
-          });
+        console.log(response);
+
+        if (formError === "") {
+          self.setState({ error: "Fields cannot be blank" });
+        } else {
+          self.setState({ error: formError });
         }
       });
   };
@@ -161,23 +185,35 @@ class OfferFood extends Component {
       </div>
       <div className="form-group">
         <label className="text-muted">Price</label>
-        <input
-          onChange={this.handleChange("price")}
-          type="text"
-          className="form-control"
-          value={price}
-        />
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">€</span>
+          </div>
+          <input
+            onChange={this.handleChange("price")}
+            type="text"
+            className="form-control"
+            value={price}
+          />
+        </div>
       </div>
 
       <div className="form-group fileInput">
         <label className="text-muted">Image</label>
-        <input
-          id="image"
-          onChange={this.handleChange("image")}
-          type="File"
-          className="form-control"
-        />
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Upload</span>
+          </div>
+          <input
+            key={name}
+            id="image"
+            onChange={this.handleChange("image")}
+            type="File"
+            className="form-control"
+          />
+        </div>
       </div>
+
       <div className="text-center">
         <button
           onClick={this.clickSubmit}

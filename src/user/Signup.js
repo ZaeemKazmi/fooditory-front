@@ -1,11 +1,20 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
-import { signup, isAuthenticated } from "../auth";
+import { isAuthenticated } from "../auth";
 
 const axios = require("axios");
 
+const emailRegex = RegExp(
+  /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+);
+var formError, nameError, emailerror, passwordError, imageError;
 class Signup extends Component {
   constructor() {
+    formError = "";
+    nameError = "";
+    emailerror = "";
+    passwordError = "";
+    imageError = "";
     super();
     this.state = {
       name: "",
@@ -13,9 +22,9 @@ class Signup extends Component {
       password: "",
       image: "",
       countryOfOrigin: "",
-      accommName: "",
-      accommStreet: "",
-      accommZipcode: "",
+      accommName: "Chiemgaustraße",
+      accommStreet: "Traunsteiner Straße 1-13",
+      accommZipcode: "81549",
       accommCity: "Munich",
       accommCountry: "Germany",
       error: "",
@@ -24,12 +33,62 @@ class Signup extends Component {
   }
 
   handleChange = name => event => {
-    this.setState({ error: "" });
+    switch (name) {
+      case "name":
+        nameError =
+          event.target.value.length < 3
+            ? "Display name must be at least 3 characters. "
+            : "";
+        break;
+      case "email":
+        console.log(emailRegex.test(event.target.value));
+        emailerror = emailRegex.test(event.target.value)
+          ? ""
+          : "Invalid email address ";
+        break;
+      case "password":
+        passwordError =
+          event.target.value.length < 7
+            ? "Password must be at least 7 characters. "
+            : "";
+        break;
+      case "image":
+        imageError =
+          event.target.files[0] === null ? "Image cannot be empty. " : "";
+        break;
+      default:
+        break;
+    }
+
     this.setState({ open: false });
     this.setState({ [name]: event.target.value });
 
     if (name === "image") {
       this.setState({ [name]: event.target.files[0] });
+    }
+  };
+  setAccomDetails = event => {
+    console.log(event.target.value);
+    if (event.target.value === "Accom1") {
+      this.setState({ accommName: "Chiemgaustraße" });
+      this.setState({ accommStreet: "Traunsteiner Straße 1-13" });
+      this.setState({ accommZipcode: "81549" });
+      this.setState({ accommCity: "Munich" });
+      this.setState({ accommCountry: "Germany" });
+    }
+    if (event.target.value === "Accom2") {
+      this.setState({ accommName: "Heiglhofstraße" });
+      this.setState({ accommStreet: "Heiglhofstraße 64, 65" });
+      this.setState({ accommZipcode: "81377" });
+      this.setState({ accommCity: "Munich" });
+      this.setState({ accommCountry: "Germany" });
+    }
+    if (event.target.value === "Accom3") {
+      this.setState({ accommName: "Stiftsbogen" });
+      this.setState({ accommStreet: "Schröfelhofstraße 4-26a" });
+      this.setState({ accommZipcode: "81375" });
+      this.setState({ accommCity: "Munich" });
+      this.setState({ accommCountry: "Germany" });
     }
   };
 
@@ -100,39 +159,27 @@ class Signup extends Component {
           open: false
         });
         console.log(response);
+        self.setState({ open: true });
       })
       .catch(err => {
-        console.log(err.response);
-        if (err.response.status !== 200) {
-          var errmsg = err.response.data.error;
-
-          if (errmsg === undefined) {
-            this.setState({
-              error: "Fields cannot be empty!"
-            });
-          } else if (
-            JSON.stringify(err.response.data.error).includes("E11000")
-          ) {
-            this.setState({ error: "Email already exist!" });
-          } else {
-            this.setState({ error: err.response.data.error });
+        var errmsg = err.response.data.error;
+        formError = nameError + emailerror + passwordError + imageError;
+        console.log(formError);
+        if (formError === "") {
+          self.setState({ error: "Fields cannot be blank" });
+          console.log(err.response.data);
+          if (errmsg !== undefined) {
+            if (JSON.stringify(err.response.data.error).includes("E11000")) {
+              this.setState({ error: "Email already exist!" });
+            }
           }
+        } else {
+          self.setState({ error: formError });
         }
       });
   };
 
-  signupForm = (
-    name,
-    email,
-    password,
-    image,
-    countryOfOrigin,
-    accommName,
-    accommStreet,
-    accommZipcode,
-    accommCity,
-    accommCountry
-  ) => (
+  signupForm = (name, email, password, image, countryOfOrigin) => (
     <form>
       <div className="form-group">
         <label className="text-muted">Display Name</label>
@@ -163,12 +210,18 @@ class Signup extends Component {
       </div>
       <div className="form-group">
         <label className="text-muted">Image</label>
-        <input
-          id="image"
-          onChange={this.handleChange("image")}
-          type="File"
-          className="form-control"
-        />
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Upload</span>
+          </div>
+          <input
+            key={name}
+            id="image"
+            onChange={this.handleChange("image")}
+            type="File"
+            className="form-control"
+          />
+        </div>
       </div>
       <div className="form-group">
         <label className="text-muted">Country Of Origin</label>
@@ -180,42 +233,19 @@ class Signup extends Component {
         />
       </div>
 
-      <h4 className="mt-5 mb-5">Accommodation Details</h4>
-      <div className="form-group">
-        <label className="text-muted">Building Number</label>
-        <input
-          onChange={this.handleChange("accommName")}
-          type="text"
-          className="form-control"
-          value={accommName}
-        />
+      <div class="form-group">
+        <label className="text-muted">Accommodation</label>
+        <select
+          class="selectpicker form-control"
+          value={this.state.value}
+          onChange={this.setAccomDetails}
+        >
+          <option value="accom1">Chiemgaustraße</option>
+          <option alue="accom2">Heiglhofstraße</option>
+          <option alue="accom3">Stiftsbogen</option>
+        </select>
       </div>
-      <div className="form-group">
-        <label className="text-muted">Street</label>
-        <input
-          onChange={this.handleChange("accommStreet")}
-          type="text"
-          className="form-control"
-          value={accommStreet}
-        />
-      </div>
-      <div className="form-group">
-        <label className="text-muted">Zip Code</label>
-        <input
-          onChange={this.handleChange("accommZipcode")}
-          type="text"
-          className="form-control"
-          value={accommZipcode}
-        />
-      </div>
-      <div className="form-group">
-        <label className="text-muted">City</label>
-        <label className="form-control">{accommCity}</label>
-      </div>
-      <div className="form-group">
-        <label className="text-muted">Country</label>
-        <label className="form-control">{accommCountry}</label>
-      </div>
+
       <button onClick={this.clickSubmit} className="btn btn-raised btn-primary">
         Register
       </button>

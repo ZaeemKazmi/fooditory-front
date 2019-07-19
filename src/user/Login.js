@@ -26,20 +26,24 @@ class Login extends Component {
     this.setState({ loading: true });
     const { email, password } = this.state;
 
-        const user = {
-            email,
-            password
-        };
-        console.log(user);
-        login(user).then(response => {
-            this.setState({ loading: false });
-            authenticate(response.data, () => {
-                this.setState({ redirectToReferer: true });
-            });
-        }).catch(err => {
-            this.setState({ loading: false });
-            console.log(err.response);
-            this.setState({ error: "There was error in logging in, please try again." });
+    const user = {
+      email,
+      password
+    };
+    console.log(user);
+    login(user)
+      .then(response => {
+        this.setState({ loading: false });
+        authenticate(response.data, () => {
+          this.setState({ redirectToReferer: true });
+        });
+      })
+      .catch(err => {
+        this.setState({ loading: false });
+        console.log(err.response);
+        this.setState({
+          error: "There was error in logging in, please try again."
+        });
       });
   };
 
@@ -83,8 +87,10 @@ class Login extends Component {
             >
               Login
             </button>
-            <div className="forgot">
-              <a href="">Forget Password?</a> | <a href="">New User?</a>
+            <div className="forgot text-center">
+              <a className="text-center" href="/signup">
+                New User?
+              </a>
             </div>
           </form>
         </article>
