@@ -32,7 +32,6 @@ const UserProfileTemplate = Styled(PlainUserProfileTemplate)`
   display: flex;
   height: 100%;
   justify-content: center;
-  background-color: red;
 
   .main-content {
     background-color: white;
