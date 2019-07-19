@@ -1,7 +1,7 @@
 
 .logo{
   padding: 0px;
-  margin: 0px 0px 0px 400px;
+  /* margin: 0px 0px 0px 400px; */
   width: 200px;
 }
 .navbar{
@@ -21,7 +21,7 @@
   color: #fff;
 }
 .selection{
-  margin-right: 400px;
+  /* margin-right: 400px; */
   border-bottom: none;
 }
 
@@ -29,17 +29,19 @@
 
 .landing{
   margin-top: 25%;
-}
-
-.half_Page {
   font-size: 32px;
   line-break: 32px;
   font-weight: 700;
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-  height: 100vh;
+}
+.landing-back{
   width: 100%;
+  height: 100vh;
+  min-height: 100vh;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  margin: 0;
+  padding: 0;
 }
 
 .desctList {
