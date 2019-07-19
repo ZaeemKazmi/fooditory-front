@@ -12,9 +12,9 @@ const Home = () => (
       <div className="col landing-back" style={{backgroundImage: `url(${landing})`}}>
 
         <div className="container">
-          <div className="row landing justify-content-center">
+          <div className="row landing justify-content-between">
 
-            <div className="col-md-6">
+            <div className="col-md-5">
               <div className="btn">
                 <Link className="link offer-btn" to="/offerFood">
                   Offer Food
@@ -29,7 +29,7 @@ const Home = () => (
               </div>
             </div>
 
-            <div className="col-md-6">
+            <div className="col-md-5">
               <div className="btn">
                 <Link className="link buy-btn" to="/Browse">
                   Buy Food
