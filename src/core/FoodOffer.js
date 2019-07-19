@@ -1,10 +1,38 @@
 import React from 'react';
 import Styled from 'styled-components';
+import { withRouter } from 'react-router-dom';
 
 import RoundButton from './RoundButton';
 
 
 class PlainFoodOffer extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.chatRedirect = this.chatRedirect.bind(this);
+  }
+
+  chatRedirect(e) {
+    console.log(this);
+    const itemId = this.props._id;
+    const itemName = this.props.name;
+    const sellerId  = this.props.sellerId;
+    const sellerName = this.props.username;
+
+    const data = {
+      itemId,
+      itemName,
+      sellerId,
+      sellerName
+    };
+    console.log(data);
+
+    this.props.history.push({
+      pathname: "/chat",
+      newChat: data // your data array of objects
+    });
+  }
+
   render() {
     return (
       <div className={this.props.className}>
@@ -16,7 +44,7 @@ class PlainFoodOffer extends React.Component {
             Cuisine: {this.props.cuisine}<br/>
             Ingredients: {this.props.ingredients}<br/>
           </div>
-          <RoundButton id="message">message</RoundButton>
+          <RoundButton id="message" onClick={this.chatRedirect}>message</RoundButton>
         </div>
       </div>
     );
@@ -51,4 +79,4 @@ const FoodOffer = Styled(PlainFoodOffer)`
     border-color: #21B4C6;
   }
 `;
-export default FoodOffer;
+export default withRouter(FoodOffer);

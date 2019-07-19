@@ -4,6 +4,8 @@ import Styled from 'styled-components';
 import FoodOffer from './FoodOffer';
 import Review from './Review';
 
+const axios = require('axios');
+
 
 class PlainOffersAndReviewsView extends React.Component {
   constructor(props) {
@@ -34,23 +36,28 @@ class PlainOffersAndReviewsView extends React.Component {
         }
       )
 
-    fetch(`http://127.0.0.1:8080/${this.state.user}/items`)
-      .then(res => res.json())
-      .then(
-        (result) => {
-          this.setState({
-            offers: result.map((item, i) => (
-              <FoodOffer key={i} {...item}/>
-            ))
-          });
-        },
-        (error) => {
-          console.log(error)
-          this.setState({
-            offers: []
-          });
-        }
-      )
+    axios.get("http://127.0.0.1:8080/users/me")
+      .then(res => {
+        const username = res.data.name;
+
+        fetch(`http://127.0.0.1:8080/${this.state.user}/items`)
+          .then(res => res.json())
+          .then(
+            (result) => {
+              this.setState({
+                offers: result.map((item, i) => (
+                  <FoodOffer key={i} {...item} username={username}/>
+                ))
+              });
+            },
+            (error) => {
+              console.log(error)
+              this.setState({
+                offers: []
+              });
+            }
+          )
+      });
   }
 
   render() {
