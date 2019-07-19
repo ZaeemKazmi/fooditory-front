@@ -10,18 +10,18 @@ body {
 }
 .login {
   font-family: "Josefin Sans", sans-serif;
-  /* -webkit-transition: 0.3s;
+  -webkit-transition: 0.3s;
   -moz-transition: 0.3s;
   transition: 0.3s;
-  -webkit-transform: rotateY(40deg);
-  -moz-transform: rotateY(40deg);
-  transform: rotateY(40deg); */
+  -webkit-transform: rotateY(37deg);
+  -moz-transform: rotateY(37deg);
+  transform: rotateY(37deg);
 }
-/* .login:hover {
+.login:hover {
   -webkit-transform: rotate(0);
   -moz-transform: rotate(0);
   transform: rotate(0);
-} */
+}
 .login .form-group {
   margin-bottom: 17px;
 }

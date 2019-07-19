@@ -245,10 +245,14 @@ class Signup extends Component {
           <option alue="accom3">Stiftsbogen</option>
         </select>
       </div>
-
-      <button onClick={this.clickSubmit} className="btn btn-raised btn-primary">
-        Register
-      </button>
+      <div className="text-center">
+        <button
+          onClick={this.clickSubmit}
+          className="btn btn-raised btn-primary"
+        >
+          Register
+        </button>
+      </div>
     </form>
   );
 
