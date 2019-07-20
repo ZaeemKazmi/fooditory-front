@@ -71,12 +71,6 @@ class Signup extends Component {
     if (!emailRegex.test(email)) {
       errors.push("Email is not valid");
     }
-    if (email.split("").filter(x => x === "@").length !== 1) {
-      errors.push("Email should contain a @");
-    }
-    if (email.indexOf(".") === -1) {
-      errors.push("Email should contain at least one dot");
-    }
     if (password.length < 8) {
       errors.push("Password should be at least 8 characters long");
     }
