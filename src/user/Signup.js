@@ -7,14 +7,9 @@ const axios = require("axios");
 const emailRegex = RegExp(
   /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 );
-var formError, nameError, emailerror, passwordError, imageError;
+
 class Signup extends Component {
   constructor() {
-    formError = "";
-    nameError = "";
-    emailerror = "";
-    passwordError = "";
-    imageError = "";
     super();
     this.state = {
       name: "",
@@ -33,32 +28,6 @@ class Signup extends Component {
   }
 
   handleChange = name => event => {
-    switch (name) {
-      case "name":
-        nameError =
-          event.target.value.length < 3
-            ? "Display name must be at least 3 characters. "
-            : "";
-        break;
-      case "email":
-        emailerror = emailRegex.test(event.target.value)
-          ? ""
-          : "Invalid email address ";
-        break;
-      case "password":
-        passwordError =
-          event.target.value.length < 7
-            ? "Password must be at least 7 characters. "
-            : "";
-        break;
-      case "image":
-        imageError =
-          event.target.files[0] === null ? "Image cannot be empty. " : "";
-        break;
-      default:
-        break;
-    }
-
     this.setState({ open: false });
     this.setState({ [name]: event.target.value });
 
@@ -90,90 +59,123 @@ class Signup extends Component {
     }
   };
 
+  validate(name, email, password, image) {
+    const errors = [];
+
+    if (name.length === 0) {
+      errors.push("Name can't be empty");
+    }
+    if (name.length < 3) {
+      errors.push("Name should be at least 3 characters");
+    }
+    if (!emailRegex.test(email)) {
+      errors.push("Email is not valid");
+    }
+    if (email.split("").filter(x => x === "@").length !== 1) {
+      errors.push("Email should contain a @");
+    }
+    if (email.indexOf(".") === -1) {
+      errors.push("Email should contain at least one dot");
+    }
+    if (password.length < 8) {
+      errors.push("Password should be at least 8 characters long");
+    }
+    if (image.length === 0) {
+      errors.push("Image can't be empty");
+    }
+
+    return errors;
+  }
+
   clickSubmit = event => {
     event.preventDefault();
 
-    const {
-      name,
-      email,
-      password,
-      image,
-      countryOfOrigin,
-      accommName,
-      accommStreet,
-      accommZipcode,
-      accommCity,
-      accommCountry
-    } = this.state;
+    const errors = this.validate(
+      this.state.name,
+      this.state.email,
+      this.state.password,
+      this.state.image
+    );
+    if (errors.length === 0) {
+      const {
+        name,
+        email,
+        password,
+        image,
+        countryOfOrigin,
+        accommName,
+        accommStreet,
+        accommZipcode,
+        accommCity,
+        accommCountry
+      } = this.state;
 
-    const user = {
-      name: name,
-      email: email,
-      password: password,
-      image: image,
-      countryOfOrigin: countryOfOrigin,
-      accommodation: {
-        name: accommName,
-        street: accommStreet,
-        zipcode: accommZipcode,
-        city: accommCity,
-        country: accommCountry
-      }
-    };
-    // console.log(user);
-    var self = this;
-    var bodyFormData = new FormData();
-    bodyFormData.set("name", this.state.name);
-    bodyFormData.set("email", this.state.email);
-    bodyFormData.set("password", this.state.password);
-    bodyFormData.append("image", this.state.image);
-    bodyFormData.set("countryOfOrigin", this.state.countryOfOrigin);
-    bodyFormData.set("accommName", this.state.accommName);
-    bodyFormData.set("accommStreet", this.state.accommStreet);
-    bodyFormData.set("accommZipcode", this.state.accommZipcode);
-    bodyFormData.set("accommCity", this.state.accommCity);
-    bodyFormData.set("accommCountry", this.state.accommCountry);
+      const user = {
+        name: name,
+        email: email,
+        password: password,
+        image: image,
+        countryOfOrigin: countryOfOrigin,
+        accommodation: {
+          name: accommName,
+          street: accommStreet,
+          zipcode: accommZipcode,
+          city: accommCity,
+          country: accommCountry
+        }
+      };
+      // console.log(user);
+      var self = this;
+      var bodyFormData = new FormData();
+      bodyFormData.set("name", this.state.name);
+      bodyFormData.set("email", this.state.email);
+      bodyFormData.set("password", this.state.password);
+      bodyFormData.append("image", this.state.image);
+      bodyFormData.set("countryOfOrigin", this.state.countryOfOrigin);
+      bodyFormData.set("accommName", this.state.accommName);
+      bodyFormData.set("accommStreet", this.state.accommStreet);
+      bodyFormData.set("accommZipcode", this.state.accommZipcode);
+      bodyFormData.set("accommCity", this.state.accommCity);
+      bodyFormData.set("accommCountry", this.state.accommCountry);
 
-    /* for (var key of bodyFormData.entries()) {
+      /* for (var key of bodyFormData.entries()) {
       console.log(key[0] + ", " + key[1]);
     }*/
-    axios({
-      method: "post",
-      url: "http://localhost:8080/signup",
-      data: bodyFormData,
-      config: { headers: { "Content-Type": "application/json" } }
-    })
-      .then(function(response) {
-        self.setState({
-          name: "",
-          email: "",
-          password: "",
-          image: "",
-          countryOfOrigin: "",
-          accommName: "",
-          accommStreet: "",
-          accommZipcode: "",
-          error: "",
-          open: false
-        });
-        //console.log(response);
-        self.setState({ open: true });
+      axios({
+        method: "post",
+        url: "http://localhost:8080/signup",
+        data: bodyFormData,
+        config: { headers: { "Content-Type": "application/json" } }
       })
-      .catch(err => {
-        var errmsg = err.response.data.error;
-        formError = nameError + emailerror + passwordError + imageError;
-        if (formError === "") {
-          self.setState({ error: "Fields cannot be blank" });
-          // console.log(err.response.data);
+        .then(function(response) {
+          self.setState({
+            name: "",
+            email: "",
+            password: "",
+            image: "",
+            countryOfOrigin: "",
+            accommName: "",
+            accommStreet: "",
+            accommZipcode: "",
+            error: "",
+            open: false
+          });
+          //console.log(response);
+          self.setState({ open: true });
+        })
+        .catch(err => {
+          var errmsg = err.response.data.error;
           if (errmsg !== undefined) {
             if (JSON.stringify(err.response.data.error).includes("E11000")) {
               this.setState({ error: "Email already exist!" });
             }
+          } else {
+            self.setState({ error: "Error" });
           }
-        } else {
-          self.setState({ error: formError });
-        }
-      });
+        });
+    } else {
+      this.setState({ error: errors[0] });
+    }
   };
 
   signupForm = (name, email, password, image, countryOfOrigin) => (
