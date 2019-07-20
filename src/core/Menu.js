@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, withRouter } from "react-router-dom";
 import { logout, isAuthenticated } from "../auth";
-import logo from './logo.png';
+import logo from "./logo.png";
 import "./Home.css";
 
 const isActive = (history, path) => {
@@ -10,85 +10,74 @@ const isActive = (history, path) => {
 };
 
 const Menu = ({ history }) => (
+  <nav class="navbar">
+    <div className="container nav-wrapper">
+      <a class="navbar-brand" href="/">
+        <img className="logo" src={logo} />
+      </a>
 
-  <nav class="navbar sticky-top">
-
-  <div className="container nav-wrapper">
-
-  <a class="navbar-brand" href="/">
-      <img className="logo" src={logo} />
-  </a>
-
-  <div>
-    <ul className="nav selection">
-      <li className="nav-item">
-        <Link className="nav-link" style={isActive(history, "/")} to="/">
-          Home
-        </Link>
-      </li>
-
-      {!isAuthenticated() && (
-        <>
+      <div>
+        <ul className="nav selection" style={{ backgroundColor: "#3e66ef" }}>
           <li className="nav-item">
-            <Link
-              className="nav-link"
-              style={isActive(history, "/login")}
-              to="/login"
-            >
-              Login
+            <Link className="nav-link" style={isActive(history, "/")} to="/">
+              Home
             </Link>
           </li>
-          <li className="nav-item">
-            <Link
-              className="nav-link"
-              style={isActive(history, "/signup")}
-              to="/signup"
-            >
-              Sign Up
-            </Link>
-          </li>
-        </>
-      )}
 
-      {isAuthenticated() && (
-        <>
-          <li className="nav-item">
-            <a
-              className="nav-link"
-              style={
-                (isActive(history, "/logout"),
-                { cursor: "pointer"})
-              }
-              onClick={() => logout(() => history.push("/"))}
-              to="/logout"
-            >
-              Logout
-            </a>
-          </li>
-          <li className="nav-item">
-            <a
-              className="nav-link"
-              style={{ cursor: "pointer"}}
-            >
-              {isAuthenticated().user.name}
-            </a>
-          </li>
-          <li className="nav-item">
-            <Link
-              className="nav-link"
-              style={isActive(history, "/userItem")}
-              to="/userItem"
-            >
-              Items
-            </Link>
-          </li>
-        </>
-      )}
-    </ul>
-  </div>
+          {!isAuthenticated() && (
+            <>
+              <li className="nav-item">
+                <Link
+                  className="nav-link"
+                  style={isActive(history, "/login")}
+                  to="/login"
+                >
+                  Login
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link
+                  className="nav-link"
+                  style={isActive(history, "/signup")}
+                  to="/signup"
+                >
+                  Sign Up
+                </Link>
+              </li>
+            </>
+          )}
 
-  </div>
-
+          {isAuthenticated() && (
+            <>
+              <li className="nav-item">
+                <a
+                  className="nav-link"
+                  style={(isActive(history, "/logout"), { cursor: "pointer" })}
+                  onClick={() => logout(() => history.push("/"))}
+                  to="/logout"
+                >
+                  Logout
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" style={{ cursor: "pointer" }}>
+                  {isAuthenticated().user.name}
+                </a>
+              </li>
+              <li className="nav-item">
+                <Link
+                  className="nav-link"
+                  style={isActive(history, "/userItem")}
+                  to="/userItem"
+                >
+                  Items
+                </Link>
+              </li>
+            </>
+          )}
+        </ul>
+      </div>
+    </div>
   </nav>
 );
 
