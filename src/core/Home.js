@@ -47,7 +47,11 @@ const Home = () => (
                 <div className="text-center">
                   <ul
                     className="desctList text-left"
-                    style={{ display: "inline-block", verticalAlign: "middle" }}
+                    style={{
+                      display: "inline-block",
+                      verticalAlign: "middle",
+                      marginLeft: "60px"
+                    }}
                   >
                     <br />
                     <li>Homemade and affordable foods</li>
