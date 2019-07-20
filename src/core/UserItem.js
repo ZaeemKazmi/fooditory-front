@@ -60,6 +60,7 @@ class UserItem extends Component {
     return (
       <div className="row" style={{ marginTop: "10px", paddingLeft: "30px" }}>
         {this.state.data.map((item, index) => {
+          const buyer = item.buyerId;
           return (
             <div
               className="card text-center"
@@ -79,23 +80,33 @@ class UserItem extends Component {
                   style={{ width: "100px", height: "100px" }}
                   src={"http://localhost:8080/" + item.image}
                 />
-                <div
-                  className="custom-control custom-switch"
-                  style={{
-                    paddingTop: "10px"
-                  }}
-                >
-                  <input
-                    type="checkbox"
-                    id={index}
-                    className="custom-control-input"
-                    onChange={this.changeStatus(item)}
-                    defaultChecked={item.status}
-                  />
-                  <label className="custom-control-label" htmlFor={index}>
-                    Item status
-                  </label>
-                </div>
+                {item.buyerId === null ? (
+                  <div
+                    className="custom-control custom-switch"
+                    style={{
+                      paddingTop: "10px"
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      id={index}
+                      className="custom-control-input"
+                      onChange={this.changeStatus(item)}
+                      defaultChecked={item.status}
+                    />
+                    <label className="custom-control-label" htmlFor={index}>
+                      Item status
+                    </label>
+                  </div>
+                ) : (
+                  <div style={{ paddingTop: "10px" }}>
+                    {" "}
+                    <a href="#" class="badge badge-secondary">
+                      Sold
+                    </a>{" "}
+                  </div>
+                )}
+
                 <div
                   style={{
                     paddingTop: "10px"
@@ -104,7 +115,7 @@ class UserItem extends Component {
                   <button
                     id={item.id}
                     onClick={this.deleteItem}
-                    className="btn-primary"
+                    className="btn btn-primary btn-sm"
                   >
                     Delete
                   </button>
