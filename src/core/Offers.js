@@ -46,15 +46,6 @@ class Offers extends React.Component {
               <div className="row">
                 {this.state.data.map((item, index) => {
                   return (
-
-
-                    // <div className="card text-center" key={index}>
-                    //   <div className="card-body">{item.name}</div>
-                    //   <div className="card-body">
-                    //     <img style={{ width: "100px", height: "100px" }} src={"http://localhost:8080/" + item.image} />
-                    //   </div>
-                    // </div>
-
                             <div class="col-md-6">
                                 <div class="offer-card" key={index}>
                                     <img class="card-img-top" src={"http://localhost:8080/" + item.image} />

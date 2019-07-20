@@ -14,7 +14,7 @@ const techCompanies = [
 
 
 const Browse = () => (
-        <div className = "browse-container">
+        <div className = "container-fluid browse-container">
             <div className= "row browse-row justify-content-center align-items-center" style={{backgroundImage: `url(${browse})`}}>
                 <div className="col-lg-6 browse-col aling-center align-middle">
 
