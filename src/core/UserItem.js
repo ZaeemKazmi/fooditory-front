@@ -40,6 +40,21 @@ class UserItem extends Component {
         console.log(err);
       });
   };
+  deleteItem = event => {
+    console.log(event.target.id);
+    var itemId = event.target.id;
+
+    axios
+      .delete(`http://localhost:8080/item/delete/${itemId}`)
+      .then(function(response) {
+        window.location.reload();
+      })
+      .catch(function(response) {
+        console.log(response);
+      });
+
+    this.forceUpdate();
+  };
 
   render() {
     return (
@@ -80,6 +95,19 @@ class UserItem extends Component {
                   <label className="custom-control-label" htmlFor={index}>
                     Item status
                   </label>
+                </div>
+                <div
+                  style={{
+                    paddingTop: "10px"
+                  }}
+                >
+                  <button
+                    id={item.id}
+                    onClick={this.deleteItem}
+                    className="btn-primary"
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
             </div>
