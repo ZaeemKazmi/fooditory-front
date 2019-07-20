@@ -59,7 +59,7 @@ class Signup extends Component {
     }
   };
 
-  validate(name, email, password, image) {
+  validate(name, email, password, countryOfOrigin, image) {
     const errors = [];
 
     if (name.length === 0) {
@@ -71,8 +71,11 @@ class Signup extends Component {
     if (!emailRegex.test(email)) {
       errors.push("Email is not valid");
     }
-    if (password.length < 8) {
-      errors.push("Password should be at least 8 characters long");
+    if (password.length < 7) {
+      errors.push("Password should be at least 7 characters long");
+    }
+    if (countryOfOrigin.length === 0) {
+      errors.push("Country Of Origin can't be empty");
     }
     if (image.length === 0) {
       errors.push("Image can't be empty");
@@ -88,6 +91,7 @@ class Signup extends Component {
       this.state.name,
       this.state.email,
       this.state.password,
+      this.state.countryOfOrigin,
       this.state.image
     );
     if (errors.length === 0) {
