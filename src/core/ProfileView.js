@@ -11,7 +11,7 @@ class PlainProfileView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: { stars: 0 },
+      user: { stars: 0, reviews: 0 },
       accommodation: {}
     };
   }
@@ -42,7 +42,7 @@ class PlainProfileView extends React.Component {
         <RatingStars totalStars="5" stars={this.state.user.stars} static/>
 
         <span id="reviews">
-          1 reviews
+          {this.state.user.reviews} {this.state.user.reviews == 1 ? ('review') : ('reviews')}
         </span>
 
         <div id="message-review-buttons">

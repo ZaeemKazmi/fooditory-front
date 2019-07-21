@@ -209,9 +209,9 @@ class OfferFood extends Component {
 
       <div className="form-group fileInput">
         <label className="text-muted">Image</label>
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text">Upload</span>
+        <div className="input-group">
+          <div className="input-group-prepend">
+            <span className="input-group-text">Upload</span>
           </div>
           <input
             key={name}

@@ -152,9 +152,6 @@ class Signup extends Component {
             password: "",
             image: "",
             countryOfOrigin: "",
-            accommName: "",
-            accommStreet: "",
-            accommZipcode: "",
             error: "",
             open: false
           });
@@ -207,9 +204,9 @@ class Signup extends Component {
       </div>
       <div className="form-group">
         <label className="text-muted">Image</label>
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text">Upload</span>
+        <div className="input-group">
+          <div className="input-group-prepend">
+            <span className="input-group-text">Upload</span>
           </div>
           <input
             key={name}
@@ -230,10 +227,10 @@ class Signup extends Component {
         />
       </div>
 
-      <div class="form-group">
+      <div className="form-group">
         <label className="text-muted">Accommodation</label>
         <select
-          class="selectpicker form-control"
+          className="selectpicker form-control"
           value={this.state.value}
           onChange={this.setAccomDetails}
         >
