@@ -110,9 +110,7 @@ class Login extends Component {
     }
 
     return (
-      <div className="container">
-        <h2 className="mt-5 mb-5">Login</h2>
-
+      <div className="container" style={{ paddingTop: "7%" }}>
         <div
           className="alert alert-danger"
           style={{ display: error ? "" : "none" }}
