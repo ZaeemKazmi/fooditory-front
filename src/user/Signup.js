@@ -152,9 +152,6 @@ class Signup extends Component {
             password: "",
             image: "",
             countryOfOrigin: "",
-            accommName: "",
-            accommStreet: "",
-            accommZipcode: "",
             error: "",
             open: false
           });
