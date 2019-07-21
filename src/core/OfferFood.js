@@ -8,7 +8,6 @@ import { faBackspace } from "@fortawesome/free-solid-svg-icons";
 
 import "./OfferFood.css";
 const axios = require("axios");
-var formError = "";
 class OfferFood extends Component {
   constructor() {
     super();
@@ -30,29 +29,6 @@ class OfferFood extends Component {
   };
 
   handleChange = name => event => {
-    switch (name) {
-      case "name":
-        formError =
-          event.target.value.length < 3
-            ? "Item name must be at least 3 characters."
-            : "";
-        break;
-      case "ingredients":
-        formError =
-          event.target.value.length < 1 ? "Ingredients cannot be blank." : "";
-        break;
-      case "cuisine":
-        formError =
-          event.target.value.length < 1 ? "Cuisine cannot be blank." : "";
-        break;
-      case "image":
-        formError =
-          event.target.files[0] === null ? "Image cannot be empty." : "";
-        break;
-      default:
-        break;
-    }
-
     this.setState({ open: false });
     this.setState({ [name]: event.target.value });
 
@@ -81,66 +57,98 @@ class OfferFood extends Component {
     }
   };
 
+  validate(name, ingredient, cuisine, price, image) {
+    const errors = [];
+
+    if (name.length === 0) {
+      errors.push("Name can't be empty");
+    }
+    if (name.length < 3) {
+      errors.push("Name should be at least 3 characters");
+    }
+    if (isNaN(price)) {
+      errors.push("Price should be number");
+    }
+
+    if (ingredient.length === 0) {
+      errors.push("Ingredients can't be empty");
+    }
+    if (cuisine.length === 0) {
+      errors.push("Cuisine can't be empty");
+    }
+    if (price.length === 0) {
+      errors.push("Price can't be empty");
+    }
+    if (image.length === 0) {
+      errors.push("Image can't be empty");
+    }
+
+    return errors;
+  }
   clickSubmit = event => {
     event.preventDefault();
+    const errors = this.validate(
+      this.state.name,
+      this.state.ingredients,
+      this.state.cuisine,
+      this.state.price,
+      this.state.image
+    );
+    if (errors.length === 0) {
+      var sellerId = JSON.parse(localStorage.getItem("jwt")).user._id;
 
-    var sellerId = JSON.parse(localStorage.getItem("jwt")).user._id;
+      const { name, ingredients, chips, cuisine, price, image } = this.state;
 
-    const { name, ingredients, chips, cuisine, price, image } = this.state;
+      const item = {
+        name: name,
+        ingredients: ingredients,
+        chips: chips,
+        cuisine: cuisine,
+        price: price,
+        image: image
+      };
+      console.log(item);
+      var self = this;
 
-    const item = {
-      name: name,
-      ingredients: ingredients,
-      chips: chips,
-      cuisine: cuisine,
-      price: price,
-      image: image
-    };
-    console.log(item);
-    var self = this;
+      var bodyFormData = new FormData();
+      bodyFormData.set("sellerId", sellerId);
+      bodyFormData.set("name", this.state.name);
+      bodyFormData.set("ingredients", this.state.ingredients);
+      bodyFormData.set("cuisine", this.state.cuisine);
+      bodyFormData.set("price", this.state.price);
+      bodyFormData.append("image", this.state.image);
 
-    var bodyFormData = new FormData();
-    bodyFormData.set("sellerId", sellerId);
-    bodyFormData.set("name", this.state.name);
-    bodyFormData.set("ingredients", this.state.ingredients);
-    bodyFormData.set("cuisine", this.state.cuisine);
-    bodyFormData.set("price", this.state.price);
-    bodyFormData.append("image", this.state.image);
-
-    for (var key of bodyFormData.entries()) {
-      console.log(key[0] + ", " + key[1]);
-    }
-    axios({
-      method: "post",
-      url: "http://localhost:8080/item",
-      data: bodyFormData,
-      config: { headers: { "Content-Type": "application/json" } }
-    })
-      .then(function(response) {
-        self.setState({
-          name: "",
-          ingredients: "",
-          chips: [{ label: "Enter an ingredient", id: "1" }],
-          cuisine: "",
-          price: "",
-          image: null,
-          counter: 0,
-          error: "",
-          open: false
-        });
-        if ((response.state = 201)) {
-          self.setState({ open: true });
-        }
+      for (var key of bodyFormData.entries()) {
+        console.log(key[0] + ", " + key[1]);
+      }
+      axios({
+        method: "post",
+        url: "http://localhost:8080/item",
+        data: bodyFormData,
+        config: { headers: { "Content-Type": "application/json" } }
       })
-      .catch(function(response) {
-        console.log(response);
-
-        if (formError === "") {
-          self.setState({ error: "Fields cannot be blank" });
-        } else {
-          self.setState({ error: formError });
-        }
-      });
+        .then(function(response) {
+          self.setState({
+            name: "",
+            ingredients: "",
+            chips: [{ label: "Enter an ingredient", id: "1" }],
+            cuisine: "",
+            price: "",
+            image: null,
+            counter: 0,
+            error: "",
+            open: false
+          });
+          if ((response.state = 201)) {
+            self.setState({ open: true });
+          }
+        })
+        .catch(function(err) {
+          self.setState({ error: "Error" });
+        });
+    } else {
+      this.setState({ error: errors[0] });
+    }
   };
 
   itemForm = (name, ingredients, cuisine, price, status, image) => (
@@ -148,6 +156,7 @@ class OfferFood extends Component {
       <div className="form-group">
         <label className="text-muted">Item Name</label>
         <input
+          ref="name"
           onChange={this.handleChange("name")}
           type="text"
           className="form-control"
@@ -185,9 +194,9 @@ class OfferFood extends Component {
       </div>
       <div className="form-group">
         <label className="text-muted">Price</label>
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text">€</span>
+        <div className="input-group">
+          <div className="input-group-prepend">
+            <span className="input-group-text">€</span>
           </div>
           <input
             onChange={this.handleChange("price")}
