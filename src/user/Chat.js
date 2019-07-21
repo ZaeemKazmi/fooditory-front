@@ -569,7 +569,7 @@ class Chat extends Component {
         }
 
         .selectedTopic {
-            background-color: #8A0651;
+            background-color: #3E66EF;
             color: white;
         }
         
@@ -660,11 +660,11 @@ class Chat extends Component {
                                 this.filterChat(chats, activeChat).map((chat, i) => (
                                     // console.log(chat.from)
                                     (chat.senderId === loggedInUser.user._id) ?
-                                        (<div className="flex" key={i} className="chatMessageLeft">
+                                        (<div className="flex" key={i} className="chatMessageRight">
                                             <Chip label={chat.msg} className="chip" />
                                             <Typography variant="body1" gutterBottom className="messageInfoText" >{chat.senderName} @ {chat.createdAt}</Typography>
                                         </div>) :
-                                        (<div className="flex" key={i} className="chatMessageRight">
+                                        (<div className="flex" key={i} className="chatMessageLeft">
                                             <Chip label={chat.msg} className="chip" />
                                             <Typography variant="body1" gutterBottom className="messageInfoText" >{chat.senderName} @ {chat.createdAt}</Typography>
                                         </div>)
