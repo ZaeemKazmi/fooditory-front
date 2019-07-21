@@ -103,6 +103,15 @@ body, html{
     transform: translateY(-7px);
   }
 
+  .card-img-top{
+      max-height: 18rem;
+      width: 100%;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+  }
   .ing-detail{
     color: #ffffff;
     font-style: italic;

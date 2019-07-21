@@ -5,7 +5,7 @@ import "@material/react-chips/dist/chips.css";
 import { updateItem } from "../utils/item";
 
 import "./Offers.css";
-
+import browse from "./Browse.js";
 
 import food1 from './food1.jpg';
 import food2 from './food2.jpg';
@@ -22,8 +22,10 @@ let loggedInUser;
 
 class Offers extends React.Component {
 
-        constructor() {
-            super();
+        constructor(props) {
+
+            super(props);
+            this.chatRedirect = this.chatRedirect.bind(this);
         
             var self = this;
             this.state = {
@@ -31,8 +33,10 @@ class Offers extends React.Component {
               status: null
             };
         
+            // console.log('MIO: ' + browse.value);
+
             axios
-              .get("http://localhost:8080/userItems/" + isAuthenticated().user.id)
+              .get("http://localhost:8080/accItems/Stiftsbogen") //isAuthenticated().user.id
               .then(function(response) {
                 self.setState({ data: response.data });
               })
@@ -40,19 +44,47 @@ class Offers extends React.Component {
                 //handle error
               });
           }
+        
+          chatRedirect(e) {
+            console.log(this);
+            const itemId = this.props._id;
+            const itemName = this.props.name;
+            const sellerId  = this.props.sellerId;
+            const sellerName = this.props.username;
+        
+            const data = {
+              itemId,
+              itemName,
+              sellerId,
+              sellerName
+            };
+            console.log(data);
+        
+            this.props.history.push({
+              pathname: "/chat",
+              newChat: data // your data array of objects
+            });
+          }
 
           render() {
             return (
-              <div className="row">
+                <div className="offers-background">
+                    <div className = "container center-content">
+                        <div className= "row home-row justify-content-center">
+                            <div className="col main-col">
+                            <h3 className="tittle-desc">Current offers</h3>
+                                <div className="row">
+
                 {this.state.data.map((item, index) => {
-                  return (
+                    return (
+
+
                             <div class="col-md-6">
                                 <div class="offer-card" key={index}>
                                     <img class="card-img-top" src={"http://localhost:8080/" + item.image} />
                                     <div class="card-body">
                                         <p class="card-text">
-                                        <table class="offer-details table-sm table-borderless">
-                                            
+                                        <table class="offer-details table-sm table-borderless">                                            
                                             <tbody>
                                                 <tr>
                                                     <td scope="row">Mikayil Murad</td>
@@ -70,15 +102,20 @@ class Offers extends React.Component {
                                         </table>
                                         </p>
                                         <div class="d-flex justify-content-center align-items-center">
-                                            <button type="button" class="msg-btn">Message</button>
+                                            <button type="button" class="msg-btn" onClick={this.chatRedirect}>Message</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
-                  );
+  
+                    );
                 })}
-              </div>
+                </div>
+                </div>
+                </div>
+                </div>
+                </div>  
+              
             );
           }
   }

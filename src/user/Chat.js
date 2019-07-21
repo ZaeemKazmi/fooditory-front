@@ -631,12 +631,12 @@ class Chat extends Component {
             margin: 10px;
         }
         `,
-            <div>
+            <div className="container">
                 <div className="alert alert-danger" style={{ display: error ? "" : "none" }}>
                     {error}
                 </div>
                 <Paper className="root">
-                    <Typography variant="h4" component="h5">Chat app</Typography>
+                    <Typography variant="h4" component="h5">Chat</Typography>
                     <Typography variant="h5" component="h5">{this.getActiveChatInfo()}</Typography>
                     <div className="flex">
                         <div className="topicsWindow">

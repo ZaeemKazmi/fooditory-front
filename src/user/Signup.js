@@ -238,8 +238,8 @@ class Signup extends Component {
           onChange={this.setAccomDetails}
         >
           <option value="Chiemgaustraße">Chiemgaustraße</option>
-          <option alue="Heiglhofstraße">Heiglhofstraße</option>
-          <option alue="Stiftsbogen">Stiftsbogen</option>
+          <option value="Heiglhofstraße">Heiglhofstraße</option>
+          <option value="Stiftsbogen">Stiftsbogen</option>
         </select>
       </div>
       <div className="text-center">
