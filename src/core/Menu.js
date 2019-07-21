@@ -10,8 +10,8 @@ const isActive = (history, path) => {
 };
 
 const Menu = ({ history }) => (
-  <nav class="navbar">
-    <a class="navbar-brand" href="/">
+  <nav className="navbar">
+    <a className="navbar-brand" href="/">
       <img className="logo" src={logo} />
     </a>
 
