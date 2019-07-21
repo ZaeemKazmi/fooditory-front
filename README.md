@@ -2,7 +2,7 @@ This React.js frontend project was bootstrapped with [Create React App](https://
 
 Inorder to execute this React.js frontend project follow these steps:
 
-1) Please run <b>npm i</b> command in administrator mode from inside of this root project i.e. <b>fooditory-front</b>
+1) Please run <b>npm i</b> command in administrator mode from inside of this project i.e. <b>fooditory-front/</b>
 
 2) Before you proceed with starting the react Webapp, please setup and start your backend project <b>fooditory-api</b> first, (incase you haven't already done that)
 
