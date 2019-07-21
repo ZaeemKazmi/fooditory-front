@@ -110,25 +110,27 @@ class Login extends Component {
     }
 
     return (
-      <div className="container" style={{ paddingTop: "7%" }}>
-        <div
-          className="alert alert-danger"
-          style={{ display: error ? "" : "none" }}
-        >
-          {error}
-        </div>
-
-        {loading ? (
-          <div className="text-center">
-            <div className="spinner-border" role="status">
-              <span className="sr-only">Loading...</span>
-            </div>
+      <div className="login-body" style={{ height: "100vh" }}>
+        <div className="container" style={{ paddingTop: "7%" }}>
+          <div
+            className="alert alert-danger"
+            style={{ display: error ? "" : "none" }}
+          >
+            {error}
           </div>
-        ) : (
-          ""
-        )}
 
-        {this.loginForm(email, password)}
+          {loading ? (
+            <div className="text-center">
+              <div className="spinner-border" role="status">
+                <span className="sr-only">Loading...</span>
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
+
+          {this.loginForm(email, password)}
+        </div>
       </div>
     );
   }
