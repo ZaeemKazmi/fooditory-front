@@ -26,7 +26,8 @@ class Browse extends React.Component{
       }
 
     showOffers(e) {
-        this.props.history.push("/offers");
+        this.props.history.push({pathname: "/offers", state: this.state.selectedOption.label});
+
     }
 
   render() {
@@ -54,22 +55,5 @@ class Browse extends React.Component{
 
 }
 
-// const Browse = () => (
-//         <div className = "container-fluid browse-container">
-//             <div className= "row browse-row justify-content-center align-items-center" style={{backgroundImage: `url(${browse})`}}>
-//                 <div className="col-lg-6 browse-col aling-center align-middle">
-
-//                         <div className="row drop-back row justify-content-center align-items-center">
-//                             <div className="dropdown col-md-9"><Select options={ acc } /></div>
-//                             <div className="search col-md-3">
-//                                 <a href="/Offers" class="search-btn" role="button">show offers</a>
-//                                 {/* <button type="button" class="search-btn" onClick="href='/Offers'">show offers</button> */}
-//                             </div>
-//                         </div>
-                    
-//                 </div>
-//             </div>    
-//         </div>
-// );
 
 export default Browse;
