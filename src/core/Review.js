@@ -27,6 +27,12 @@ class PlainReview extends React.Component {
   }
 
   render() {
+    let reviewDate = "";
+    if (this.state.buyer.createdAt) {
+      reviewDate = new Date(this.state.buyer.createdAt);
+      reviewDate = reviewDate.getDate() + "-" + (reviewDate.getMonth()+1) + "-" + reviewDate.getFullYear();
+    }
+
     return (
       <div className={this.props.className}>
         <div className="user-picture-name">
@@ -41,7 +47,7 @@ class PlainReview extends React.Component {
             {this.props.title}
           </div>
           <RatingStars totalStars="5" stars={this.state.buyer.stars} static/>
-          <div className="review-date">01.06.2019</div>
+          <div className="review-date">{reviewDate}</div>
           <div className="review-body">
             {this.props.comment}
           </div>

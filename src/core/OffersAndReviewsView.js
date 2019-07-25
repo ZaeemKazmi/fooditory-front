@@ -36,7 +36,7 @@ class PlainOffersAndReviewsView extends React.Component {
         }
       )
 
-    axios.get("http://127.0.0.1:8080/users/me")
+    axios.get(`http://127.0.0.1:8080/user/${this.props.username}`)
       .then(res => {
         const username = res.data.name;
 
